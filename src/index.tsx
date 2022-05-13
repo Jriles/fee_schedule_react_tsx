@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import Services from './views/services';
 import Landing from './views/landing';
+import CreateService from './views/createService';
 
 
 const root = ReactDOM.createRoot(
@@ -21,6 +22,7 @@ root.render(
     <Routes>
       <Route path="/" element={<Landing />}/>
       <Route path="/services" element={<Services/>}/>
+      <Route path="/services/create" element={<CreateService/>}/>
     </Routes>
   </BrowserRouter>
 );
