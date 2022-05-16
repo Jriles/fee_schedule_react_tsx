@@ -48,7 +48,7 @@ export default function ServiceVariants() {
     var listItems = serviceVariants.map(function(serviceVariant, i) {
             return (
                 <ListGroup.Item>
-                    {/* <EditValueOnClick submitChangeFunction={updateService} value={service.title} id={service.id}></EditValueOnClick> */}
+                    {serviceVariant.fee}
                     <ModalComp
                         message={"Are you sure you want to delete variant?"}
                         header={DELETE_SERVICE_MODAL_HEADER}
