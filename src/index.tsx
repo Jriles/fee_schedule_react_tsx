@@ -10,6 +10,9 @@ import {
 import Services from './views/services';
 import Landing from './views/landing';
 import CreateService from './views/createService';
+import Attributes from './views/attributes';
+import CreateAttribute from './views/createAttribute';
+import ServiceVariants from './views/serviceVariants';
 
 
 const root = ReactDOM.createRoot(
@@ -23,6 +26,9 @@ root.render(
       <Route path="/" element={<Landing />}/>
       <Route path="/services" element={<Services/>}/>
       <Route path="/services/create" element={<CreateService/>}/>
+      <Route path="/service_variants" element={<ServiceVariants/>}/>
+      <Route path="/attributes" element={<Attributes/>}/>
+      <Route path="/attributes/create" element={<CreateAttribute/>}/>
     </Routes>
   </BrowserRouter>
 );

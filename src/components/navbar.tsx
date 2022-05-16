@@ -34,6 +34,12 @@ export default function NavBarComponent() {
                     <Nav.Item className="fs-5 mt-1">
                         <Link to="/services" className="text-white" style={{ textDecoration: 'none' }}>Services</Link>
                     </Nav.Item>
+                    <Nav.Item className="fs-5 mt-1 ms-3">
+                        <Link to="/service_variants" className="text-white" style={{ textDecoration: 'none' }}>Service Variants</Link>
+                    </Nav.Item>
+                    <Nav.Item className="fs-5 mt-1 ms-3">
+                        <Link to="/attributes" className="text-white" style={{ textDecoration: 'none' }}>Attributes</Link>
+                    </Nav.Item>
                 </Nav>
                 </Navbar.Collapse>
             </Container>

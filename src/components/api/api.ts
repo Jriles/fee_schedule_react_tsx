@@ -138,6 +138,12 @@ export interface CreateServiceSchema {
 export interface CreateServiceVariantSchema {
     /**
      * 
+     * @type {string}
+     * @memberof CreateServiceVariantSchema
+     */
+    'serviceId': string;
+    /**
+     * 
      * @type {number}
      * @memberof CreateServiceVariantSchema
      */
@@ -257,6 +263,12 @@ export interface VariantResponse {
      * @memberof VariantResponse
      */
     'fee': number;
+    /**
+     * 
+     * @type {string}
+     * @memberof VariantResponse
+     */
+    'serviceId': string;
 }
 
 /**
@@ -417,21 +429,17 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary create a new service attribute value (not an attribute value.) This only applies to the service listed in the path.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {CreateServiceAttributeValueSchema} createServiceAttributeValueSchema 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createServiceAttributeValue: async (serviceId: string, lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('createServiceAttributeValue', 'serviceId', serviceId)
+        createServiceAttributeValue: async (lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'lineId' is not null or undefined
             assertParamExists('createServiceAttributeValue', 'lineId', lineId)
             // verify required parameter 'createServiceAttributeValueSchema' is not null or undefined
             assertParamExists('createServiceAttributeValue', 'createServiceAttributeValueSchema', createServiceAttributeValueSchema)
-            const localVarPath = `/services/{serviceId}/attribute_lines/{lineId}/values`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
+            const localVarPath = `/service_attribute_lines/{lineId}/values`
                 .replace(`{${"lineId"}}`, encodeURIComponent(String(lineId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -461,18 +469,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Create a variant for a service with a specific combination of Jurisdiction, Filing Speed and Entity type.
-         * @param {string} serviceId 
          * @param {CreateServiceVariantSchema} createServiceVariantSchema 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createVariant: async (serviceId: string, createServiceVariantSchema: CreateServiceVariantSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('createVariant', 'serviceId', serviceId)
+        createVariant: async (createServiceVariantSchema: CreateServiceVariantSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'createServiceVariantSchema' is not null or undefined
             assertParamExists('createVariant', 'createServiceVariantSchema', createServiceVariantSchema)
-            const localVarPath = `/services/{serviceId}/variants/`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)));
+            const localVarPath = `/service_variants/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -604,18 +608,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Delete a service attribute line.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteServiceAttributeLine: async (serviceId: string, lineId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('deleteServiceAttributeLine', 'serviceId', serviceId)
+        deleteServiceAttributeLine: async (lineId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'lineId' is not null or undefined
             assertParamExists('deleteServiceAttributeLine', 'lineId', lineId)
-            const localVarPath = `/services/{serviceId}/attribute_lines/{lineId}`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
+            const localVarPath = `/service_attribute_lines/{lineId}`
                 .replace(`{${"lineId"}}`, encodeURIComponent(String(lineId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -642,22 +642,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Delete a service attribute value. valueId here is the service attribute value id NOT the attribute value id.
-         * @param {string} serviceId 
-         * @param {string} lineId 
          * @param {string} valueId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteServiceAttributeValue: async (serviceId: string, lineId: string, valueId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('deleteServiceAttributeValue', 'serviceId', serviceId)
-            // verify required parameter 'lineId' is not null or undefined
-            assertParamExists('deleteServiceAttributeValue', 'lineId', lineId)
+        deleteServiceAttributeValue: async (valueId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'valueId' is not null or undefined
             assertParamExists('deleteServiceAttributeValue', 'valueId', valueId)
-            const localVarPath = `/services/{serviceId}/attribute_lines/{lineId}/values/{valueId}`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
-                .replace(`{${"lineId"}}`, encodeURIComponent(String(lineId)))
+            const localVarPath = `/services_attribute_values/{valueId}`
                 .replace(`{${"valueId"}}`, encodeURIComponent(String(valueId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -684,18 +676,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Delete a service variant.
-         * @param {string} serviceId 
          * @param {string} variantId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteVariant: async (serviceId: string, variantId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('deleteVariant', 'serviceId', serviceId)
+        deleteVariant: async (variantId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'variantId' is not null or undefined
             assertParamExists('deleteVariant', 'variantId', variantId)
-            const localVarPath = `/services/{serviceId}/variants/{variantId}`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
+            const localVarPath = `/services_variants/{variantId}`
                 .replace(`{${"variantId"}}`, encodeURIComponent(String(variantId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -846,18 +834,14 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Get all the service attribute values for a particular service attribute line.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServiceAttrVals: async (serviceId: string, lineId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('getServiceAttrVals', 'serviceId', serviceId)
+        getServiceAttrVals: async (lineId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'lineId' is not null or undefined
             assertParamExists('getServiceAttrVals', 'lineId', lineId)
-            const localVarPath = `/services/{serviceId}/attribute_lines/{lineId}/values`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
+            const localVarPath = `/service_attribute_lines/{lineId}/values`
                 .replace(`{${"lineId"}}`, encodeURIComponent(String(lineId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -883,19 +867,47 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
-         * @summary Retrieve the fee and other information for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+         * @summary Get all variants for a particular service.
          * @param {string} serviceId 
-         * @param {Array<string>} serviceAttributeValueIds This param is an array of strings where the strings are the service attribute value ids.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariant: async (serviceId: string, serviceAttributeValueIds: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getServiceVariants: async (serviceId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'serviceId' is not null or undefined
-            assertParamExists('getVariant', 'serviceId', serviceId)
-            // verify required parameter 'serviceAttributeValueIds' is not null or undefined
-            assertParamExists('getVariant', 'serviceAttributeValueIds', serviceAttributeValueIds)
+            assertParamExists('getServiceVariants', 'serviceId', serviceId)
             const localVarPath = `/services/{serviceId}/variants/`
                 .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+         * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getVariants: async (serviceAttributeValueIds?: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/service_variants/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -1099,26 +1111,24 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary create a new service attribute value (not an attribute value.) This only applies to the service listed in the path.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {CreateServiceAttributeValueSchema} createServiceAttributeValueSchema 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createServiceAttributeValue(serviceId: string, lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createServiceAttributeValue(serviceId, lineId, createServiceAttributeValueSchema, options);
+        async createServiceAttributeValue(lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createServiceAttributeValue(lineId, createServiceAttributeValueSchema, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Create a variant for a service with a specific combination of Jurisdiction, Filing Speed and Entity type.
-         * @param {string} serviceId 
          * @param {CreateServiceVariantSchema} createServiceVariantSchema 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createVariant(serviceId: string, createServiceVariantSchema: CreateServiceVariantSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<VariantCreatedResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createVariant(serviceId, createServiceVariantSchema, options);
+        async createVariant(createServiceVariantSchema: CreateServiceVariantSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<VariantCreatedResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createVariant(createServiceVariantSchema, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1155,38 +1165,34 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Delete a service attribute line.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteServiceAttributeLine(serviceId: string, lineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteServiceAttributeLine(serviceId, lineId, options);
+        async deleteServiceAttributeLine(lineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteServiceAttributeLine(lineId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Delete a service attribute value. valueId here is the service attribute value id NOT the attribute value id.
-         * @param {string} serviceId 
-         * @param {string} lineId 
          * @param {string} valueId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteServiceAttributeValue(serviceId: string, lineId: string, valueId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteServiceAttributeValue(serviceId, lineId, valueId, options);
+        async deleteServiceAttributeValue(valueId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteServiceAttributeValue(valueId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
          * @summary Delete a service variant.
-         * @param {string} serviceId 
          * @param {string} variantId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteVariant(serviceId: string, variantId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteVariant(serviceId, variantId, options);
+        async deleteVariant(variantId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteVariant(variantId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1230,25 +1236,34 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get all the service attribute values for a particular service attribute line.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getServiceAttrVals(serviceId: string, lineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ServiceAttributeValueResponse>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceAttrVals(serviceId, lineId, options);
+        async getServiceAttrVals(lineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ServiceAttributeValueResponse>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceAttrVals(lineId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
          * 
-         * @summary Retrieve the fee and other information for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+         * @summary Get all variants for a particular service.
          * @param {string} serviceId 
-         * @param {Array<string>} serviceAttributeValueIds This param is an array of strings where the strings are the service attribute value ids.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getVariant(serviceId: string, serviceAttributeValueIds: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariant(serviceId, serviceAttributeValueIds, options);
+        async getServiceVariants(serviceId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<object>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceVariants(serviceId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+         * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getVariants(serviceAttributeValueIds?: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(serviceAttributeValueIds, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1337,25 +1352,23 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary create a new service attribute value (not an attribute value.) This only applies to the service listed in the path.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {CreateServiceAttributeValueSchema} createServiceAttributeValueSchema 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createServiceAttributeValue(serviceId: string, lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options?: any): AxiosPromise<void> {
-            return localVarFp.createServiceAttributeValue(serviceId, lineId, createServiceAttributeValueSchema, options).then((request) => request(axios, basePath));
+        createServiceAttributeValue(lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options?: any): AxiosPromise<void> {
+            return localVarFp.createServiceAttributeValue(lineId, createServiceAttributeValueSchema, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Create a variant for a service with a specific combination of Jurisdiction, Filing Speed and Entity type.
-         * @param {string} serviceId 
          * @param {CreateServiceVariantSchema} createServiceVariantSchema 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createVariant(serviceId: string, createServiceVariantSchema: CreateServiceVariantSchema, options?: any): AxiosPromise<Array<VariantCreatedResponse>> {
-            return localVarFp.createVariant(serviceId, createServiceVariantSchema, options).then((request) => request(axios, basePath));
+        createVariant(createServiceVariantSchema: CreateServiceVariantSchema, options?: any): AxiosPromise<Array<VariantCreatedResponse>> {
+            return localVarFp.createVariant(createServiceVariantSchema, options).then((request) => request(axios, basePath));
         },
         /**
          * Delete an attribute.
@@ -1388,36 +1401,32 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Delete a service attribute line.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteServiceAttributeLine(serviceId: string, lineId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteServiceAttributeLine(serviceId, lineId, options).then((request) => request(axios, basePath));
+        deleteServiceAttributeLine(lineId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteServiceAttributeLine(lineId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Delete a service attribute value. valueId here is the service attribute value id NOT the attribute value id.
-         * @param {string} serviceId 
-         * @param {string} lineId 
          * @param {string} valueId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteServiceAttributeValue(serviceId: string, lineId: string, valueId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteServiceAttributeValue(serviceId, lineId, valueId, options).then((request) => request(axios, basePath));
+        deleteServiceAttributeValue(valueId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteServiceAttributeValue(valueId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Delete a service variant.
-         * @param {string} serviceId 
          * @param {string} variantId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteVariant(serviceId: string, variantId: string, options?: any): AxiosPromise<void> {
-            return localVarFp.deleteVariant(serviceId, variantId, options).then((request) => request(axios, basePath));
+        deleteVariant(variantId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.deleteVariant(variantId, options).then((request) => request(axios, basePath));
         },
         /**
          * Get all a given attribute\'s possible values
@@ -1456,24 +1465,32 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Get all the service attribute values for a particular service attribute line.
-         * @param {string} serviceId 
          * @param {string} lineId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServiceAttrVals(serviceId: string, lineId: string, options?: any): AxiosPromise<Array<ServiceAttributeValueResponse>> {
-            return localVarFp.getServiceAttrVals(serviceId, lineId, options).then((request) => request(axios, basePath));
+        getServiceAttrVals(lineId: string, options?: any): AxiosPromise<Array<ServiceAttributeValueResponse>> {
+            return localVarFp.getServiceAttrVals(lineId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @summary Retrieve the fee and other information for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+         * @summary Get all variants for a particular service.
          * @param {string} serviceId 
-         * @param {Array<string>} serviceAttributeValueIds This param is an array of strings where the strings are the service attribute value ids.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariant(serviceId: string, serviceAttributeValueIds: Array<string>, options?: any): AxiosPromise<VariantResponse> {
-            return localVarFp.getVariant(serviceId, serviceAttributeValueIds, options).then((request) => request(axios, basePath));
+        getServiceVariants(serviceId: string, options?: any): AxiosPromise<object> {
+            return localVarFp.getServiceVariants(serviceId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+         * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getVariants(serviceAttributeValueIds?: Array<string>, options?: any): AxiosPromise<VariantResponse> {
+            return localVarFp.getVariants(serviceAttributeValueIds, options).then((request) => request(axios, basePath));
         },
         /**
          * Update an attribute\'s name or other details. But not the attribute values.
@@ -1566,28 +1583,26 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary create a new service attribute value (not an attribute value.) This only applies to the service listed in the path.
-     * @param {string} serviceId 
      * @param {string} lineId 
      * @param {CreateServiceAttributeValueSchema} createServiceAttributeValueSchema 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public createServiceAttributeValue(serviceId: string, lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).createServiceAttributeValue(serviceId, lineId, createServiceAttributeValueSchema, options).then((request) => request(this.axios, this.basePath));
+    public createServiceAttributeValue(lineId: string, createServiceAttributeValueSchema: CreateServiceAttributeValueSchema, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).createServiceAttributeValue(lineId, createServiceAttributeValueSchema, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Create a variant for a service with a specific combination of Jurisdiction, Filing Speed and Entity type.
-     * @param {string} serviceId 
      * @param {CreateServiceVariantSchema} createServiceVariantSchema 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public createVariant(serviceId: string, createServiceVariantSchema: CreateServiceVariantSchema, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).createVariant(serviceId, createServiceVariantSchema, options).then((request) => request(this.axios, this.basePath));
+    public createVariant(createServiceVariantSchema: CreateServiceVariantSchema, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).createVariant(createServiceVariantSchema, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1627,41 +1642,37 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary Delete a service attribute line.
-     * @param {string} serviceId 
      * @param {string} lineId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public deleteServiceAttributeLine(serviceId: string, lineId: string, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).deleteServiceAttributeLine(serviceId, lineId, options).then((request) => request(this.axios, this.basePath));
+    public deleteServiceAttributeLine(lineId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteServiceAttributeLine(lineId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Delete a service attribute value. valueId here is the service attribute value id NOT the attribute value id.
-     * @param {string} serviceId 
-     * @param {string} lineId 
      * @param {string} valueId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public deleteServiceAttributeValue(serviceId: string, lineId: string, valueId: string, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).deleteServiceAttributeValue(serviceId, lineId, valueId, options).then((request) => request(this.axios, this.basePath));
+    public deleteServiceAttributeValue(valueId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteServiceAttributeValue(valueId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Delete a service variant.
-     * @param {string} serviceId 
      * @param {string} variantId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public deleteVariant(serviceId: string, variantId: string, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).deleteVariant(serviceId, variantId, options).then((request) => request(this.axios, this.basePath));
+    public deleteVariant(variantId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).deleteVariant(variantId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1709,27 +1720,37 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary Get all the service attribute values for a particular service attribute line.
-     * @param {string} serviceId 
      * @param {string} lineId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getServiceAttrVals(serviceId: string, lineId: string, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getServiceAttrVals(serviceId, lineId, options).then((request) => request(this.axios, this.basePath));
+    public getServiceAttrVals(lineId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getServiceAttrVals(lineId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @summary Retrieve the fee and other information for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+     * @summary Get all variants for a particular service.
      * @param {string} serviceId 
-     * @param {Array<string>} serviceAttributeValueIds This param is an array of strings where the strings are the service attribute value ids.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getVariant(serviceId: string, serviceAttributeValueIds: Array<string>, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getVariant(serviceId, serviceAttributeValueIds, options).then((request) => request(this.axios, this.basePath));
+    public getServiceVariants(serviceId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getServiceVariants(serviceId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day)
+     * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getVariants(serviceAttributeValueIds?: Array<string>, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getVariants(serviceAttributeValueIds, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
