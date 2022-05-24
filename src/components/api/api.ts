@@ -94,19 +94,6 @@ export interface CreateAttributeValueSchema {
 /**
  * 
  * @export
- * @interface CreateServiceAttributeLineSchema
- */
-export interface CreateServiceAttributeLineSchema {
-    /**
-     * this refers to the high-level attributes
-     * @type {string}
-     * @memberof CreateServiceAttributeLineSchema
-     */
-    'attributeId': string;
-}
-/**
- * 
- * @export
  * @interface CreateServiceAttributeValueSchema
  */
 export interface CreateServiceAttributeValueSchema {
@@ -158,21 +145,46 @@ export interface CreateServiceVariantSchema {
 /**
  * 
  * @export
- * @interface ServiceAttributeValueResponse
+ * @interface ServiceAttributeLineResponse
  */
-export interface ServiceAttributeValueResponse {
+export interface ServiceAttributeLineResponse {
     /**
      * 
      * @type {string}
-     * @memberof ServiceAttributeValueResponse
+     * @memberof ServiceAttributeLineResponse
      */
     'id': string;
     /**
      * 
      * @type {string}
-     * @memberof ServiceAttributeValueResponse
+     * @memberof ServiceAttributeLineResponse
      */
-    'valueTitle': string;
+    'attribute_title'?: string;
+    /**
+     * 
+     * @type {Array<ServiceAttributeValue>}
+     * @memberof ServiceAttributeLineResponse
+     */
+    'service_attribute_values': Array<ServiceAttributeValue>;
+}
+/**
+ * 
+ * @export
+ * @interface ServiceAttributeValue
+ */
+export interface ServiceAttributeValue {
+    /**
+     * 
+     * @type {string}
+     * @memberof ServiceAttributeValue
+     */
+    'id': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServiceAttributeValue
+     */
+    'value_title': string;
 }
 /**
  * 
@@ -390,17 +402,18 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary Create an attribute line for a service. This is how we relate attribute values to services.
          * @param {string} serviceId 
-         * @param {CreateServiceAttributeLineSchema} createServiceAttributeLineSchema 
+         * @param {string} attributeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createServiceAttributeLine: async (serviceId: string, createServiceAttributeLineSchema: CreateServiceAttributeLineSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createServiceAttributeLine: async (serviceId: string, attributeId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'serviceId' is not null or undefined
             assertParamExists('createServiceAttributeLine', 'serviceId', serviceId)
-            // verify required parameter 'createServiceAttributeLineSchema' is not null or undefined
-            assertParamExists('createServiceAttributeLine', 'createServiceAttributeLineSchema', createServiceAttributeLineSchema)
-            const localVarPath = `/services/{serviceId}/attribute_lines`
-                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)));
+            // verify required parameter 'attributeId' is not null or undefined
+            assertParamExists('createServiceAttributeLine', 'attributeId', attributeId)
+            const localVarPath = `/services/{serviceId}/attributes/{attributeId}/lines`
+                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
+                .replace(`{${"attributeId"}}`, encodeURIComponent(String(attributeId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -414,12 +427,9 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
 
     
-            localVarHeaderParameter['Content-Type'] = 'application/json';
-
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(createServiceAttributeLineSchema, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -863,6 +873,78 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         },
         /**
          * 
+         * @summary Given a service id and an attribute id, return the service attribute line for that combination
+         * @param {string} serviceId 
+         * @param {string} attributeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getServiceAttribtuteLine: async (serviceId: string, attributeId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'serviceId' is not null or undefined
+            assertParamExists('getServiceAttribtuteLine', 'serviceId', serviceId)
+            // verify required parameter 'attributeId' is not null or undefined
+            assertParamExists('getServiceAttribtuteLine', 'attributeId', attributeId)
+            const localVarPath = `/services/{serviceId}/attributes/{attributeId}/lines`
+                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)))
+                .replace(`{${"attributeId"}}`, encodeURIComponent(String(attributeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Given a service id, return the all service attribute lines.
+         * @param {string} serviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getServiceAttributeLines: async (serviceId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'serviceId' is not null or undefined
+            assertParamExists('getServiceAttributeLines', 'serviceId', serviceId)
+            const localVarPath = `/services/{serviceId}/attribute_lines`
+                .replace(`{${"serviceId"}}`, encodeURIComponent(String(serviceId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Get all variants for a particular service.
          * @param {string} serviceId 
          * @param {*} [options] Override http request option.
@@ -1092,12 +1174,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * 
          * @summary Create an attribute line for a service. This is how we relate attribute values to services.
          * @param {string} serviceId 
-         * @param {CreateServiceAttributeLineSchema} createServiceAttributeLineSchema 
+         * @param {string} attributeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createServiceAttributeLine(serviceId: string, createServiceAttributeLineSchema: CreateServiceAttributeLineSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.createServiceAttributeLine(serviceId, createServiceAttributeLineSchema, options);
+        async createServiceAttributeLine(serviceId: string, attributeId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createServiceAttributeLine(serviceId, attributeId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1231,8 +1313,31 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getServiceAttrVals(lineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<ServiceAttributeValueResponse>>> {
+        async getServiceAttrVals(lineId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceAttrVals(lineId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Given a service id and an attribute id, return the service attribute line for that combination
+         * @param {string} serviceId 
+         * @param {string} attributeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getServiceAttribtuteLine(serviceId: string, attributeId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<ServiceAttributeLineResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceAttribtuteLine(serviceId, attributeId, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Given a service id, return the all service attribute lines.
+         * @param {string} serviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getServiceAttributeLines(serviceId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getServiceAttributeLines(serviceId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1332,12 +1437,12 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary Create an attribute line for a service. This is how we relate attribute values to services.
          * @param {string} serviceId 
-         * @param {CreateServiceAttributeLineSchema} createServiceAttributeLineSchema 
+         * @param {string} attributeId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createServiceAttributeLine(serviceId: string, createServiceAttributeLineSchema: CreateServiceAttributeLineSchema, options?: any): AxiosPromise<void> {
-            return localVarFp.createServiceAttributeLine(serviceId, createServiceAttributeLineSchema, options).then((request) => request(axios, basePath));
+        createServiceAttributeLine(serviceId: string, attributeId: string, options?: any): AxiosPromise<void> {
+            return localVarFp.createServiceAttributeLine(serviceId, attributeId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1458,8 +1563,29 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getServiceAttrVals(lineId: string, options?: any): AxiosPromise<Array<ServiceAttributeValueResponse>> {
+        getServiceAttrVals(lineId: string, options?: any): AxiosPromise<Array<object>> {
             return localVarFp.getServiceAttrVals(lineId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Given a service id and an attribute id, return the service attribute line for that combination
+         * @param {string} serviceId 
+         * @param {string} attributeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getServiceAttribtuteLine(serviceId: string, attributeId: string, options?: any): AxiosPromise<ServiceAttributeLineResponse> {
+            return localVarFp.getServiceAttribtuteLine(serviceId, attributeId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Given a service id, return the all service attribute lines.
+         * @param {string} serviceId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getServiceAttributeLines(serviceId: string, options?: any): AxiosPromise<Array<object>> {
+            return localVarFp.getServiceAttributeLines(serviceId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1559,13 +1685,13 @@ export class DefaultApi extends BaseAPI {
      * 
      * @summary Create an attribute line for a service. This is how we relate attribute values to services.
      * @param {string} serviceId 
-     * @param {CreateServiceAttributeLineSchema} createServiceAttributeLineSchema 
+     * @param {string} attributeId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public createServiceAttributeLine(serviceId: string, createServiceAttributeLineSchema: CreateServiceAttributeLineSchema, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).createServiceAttributeLine(serviceId, createServiceAttributeLineSchema, options).then((request) => request(this.axios, this.basePath));
+    public createServiceAttributeLine(serviceId: string, attributeId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).createServiceAttributeLine(serviceId, attributeId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -1714,6 +1840,31 @@ export class DefaultApi extends BaseAPI {
      */
     public getServiceAttrVals(lineId: string, options?: AxiosRequestConfig) {
         return DefaultApiFp(this.configuration).getServiceAttrVals(lineId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Given a service id and an attribute id, return the service attribute line for that combination
+     * @param {string} serviceId 
+     * @param {string} attributeId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getServiceAttribtuteLine(serviceId: string, attributeId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getServiceAttribtuteLine(serviceId, attributeId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Given a service id, return the all service attribute lines.
+     * @param {string} serviceId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getServiceAttributeLines(serviceId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getServiceAttributeLines(serviceId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -43,22 +43,23 @@ export default function ServiceVariants() {
         });
     }, [])
 
-    if (!serviceVariants) return null;
-
-    var listItems = serviceVariants.map(function(serviceVariant, i) {
-            return (
-                <ListGroup.Item>
-                    {serviceVariant.fee}
-                    <ModalComp
-                        message={"Are you sure you want to delete variant?"}
-                        header={DELETE_SERVICE_MODAL_HEADER}
-                        callback={deleteServiceVariant}
-                        resourceId={serviceVariant.id}
-                    />
-                </ListGroup.Item>
-            )
-        }
-    )
+    var listItems:any = [];
+    if (serviceVariants) {
+        listItems = serviceVariants.map(function(serviceVariant, i) {
+                return (
+                    <ListGroup.Item>
+                        {serviceVariant.fee}
+                        <ModalComp
+                            message={"Are you sure you want to delete variant?"}
+                            header={DELETE_SERVICE_MODAL_HEADER}
+                            callback={deleteServiceVariant}
+                            resourceId={serviceVariant.id}
+                        />
+                    </ListGroup.Item>
+                )
+            }
+        )
+    }
 
     return (
         <Container className="mt-5">
