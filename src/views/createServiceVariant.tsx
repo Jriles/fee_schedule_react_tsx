@@ -12,12 +12,28 @@ export default function CreateServiceVariant() {
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
     const [serviceLines, setServiceLines] = React.useState<ServiceAttributeLineResponse[]>([]);
     const [serviceAttrVals, setServiceAttrVals] = React.useState<ServiceAttributeValue[]>([]);
+    interface SelectedServiceAttrVal {
+        //where the val here is the service attr val id
+        LineId: string,
+        ServiceAttrValId: string
+    }
+    const [selectedServiceAttrVals, setSelectedServiceAttrVals] = React.useState<SelectedServiceAttrVal[]>([]);
+
+    React.useEffect(() => {
+        feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
+            setServices(response.data.services);
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
+    }, [])
 
     function createServiceVariant() {
+        console.log(selectedServiceAttrVals)
         const serviceVariantVals: CreateServiceVariantSchema = {
             serviceId: serviceId,
             fee: 100,
-            serviceAttributeValueIds: []
+            serviceAttributeValueIds: selectedServiceAttrVals.map(val => val.ServiceAttrValId)
         }
 
         feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
@@ -50,12 +66,14 @@ export default function CreateServiceVariant() {
     }
 
     function renderLineAttrs (line:ServiceAttributeLineResponse) {
-        var attrValOptions = [];
-        attrValOptions = line.service_attribute_values.map(function(attrVal, i) {
-            return (
-                <option value={attrVal.id}>{attrVal.value_title}</option>
-            )
-        })
+        var attrValOptions = null;
+        if (line.service_attribute_values != null) {
+            attrValOptions = line.service_attribute_values.map(function(attrVal, i) {
+                return (
+                    <option value={attrVal.id}>{attrVal.value_title}</option>
+                )
+            })
+        }
         return attrValOptions
     }
 
@@ -66,7 +84,7 @@ export default function CreateServiceVariant() {
                     return (
                         <div>
                             <p>{serviceLine.attribute_title}</p>
-                            <Form.Select aria-label="Default select example" onChange={onServiceIdChange}>
+                            <Form.Select aria-label="Default select example" onChange={(e) => onServiceAttrValsChange(e, serviceLine.id)}>
                                 {renderLineAttrs(serviceLine)}
                             </Form.Select>
                         </div>
@@ -77,15 +95,6 @@ export default function CreateServiceVariant() {
         }
         return null
     }
-    
-    React.useEffect(() => {
-        feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
-            setServices(response.data.services);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
-    }, [])
 
     var serviceOptions:any = [];
     if (services) {
@@ -95,6 +104,33 @@ export default function CreateServiceVariant() {
                 )
             }
         )
+    }
+
+    function onServiceAttrValsChange(e: ChangeEvent<HTMLSelectElement>, serviceLineId: string) {
+        const serviceAttrValId:string = e.target.value;
+        var newSelectedAttrVals = [];
+        var newSelectedAttrValPreset = false;
+        const newSelectedAttrVal: SelectedServiceAttrVal = {
+            LineId: serviceLineId,
+            ServiceAttrValId: serviceAttrValId
+        }
+        for (var selectedServiceAttrVal of selectedServiceAttrVals) {
+            if (selectedServiceAttrVal.LineId == serviceLineId)
+            {
+                newSelectedAttrValPreset = true;
+                newSelectedAttrVals.push(newSelectedAttrVal)
+            }
+            else
+            {
+                newSelectedAttrVals.push(selectedServiceAttrVal)
+            }
+        }
+        
+        if (!newSelectedAttrValPreset) {
+            newSelectedAttrVals.push(newSelectedAttrVal)
+        }
+
+        setSelectedServiceAttrVals(newSelectedAttrVals)
     }
 
     function onServiceIdChange(e: ChangeEvent<HTMLSelectElement>) {
@@ -114,7 +150,7 @@ export default function CreateServiceVariant() {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     {renderServiceAttrLines()}
                 </Form.Group>
-                <Button>Submit</Button>
+                <Button onClick={createServiceVariant}>Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>
