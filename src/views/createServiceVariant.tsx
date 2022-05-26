@@ -12,6 +12,7 @@ export default function CreateServiceVariant() {
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
     const [serviceLines, setServiceLines] = React.useState<ServiceAttributeLineResponse[]>([]);
     const [serviceAttrVals, setServiceAttrVals] = React.useState<ServiceAttributeValue[]>([]);
+    const [fee, setFee] = React.useState(0.0);
     interface SelectedServiceAttrVal {
         //where the val here is the service attr val id
         LineId: string,
@@ -22,6 +23,8 @@ export default function CreateServiceVariant() {
     React.useEffect(() => {
         feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
+            setServiceId(services[0].id)
+            getAllServiceLines(serviceId)
         })
         .catch((error: any) => {
             console.log(error);
@@ -32,7 +35,7 @@ export default function CreateServiceVariant() {
         console.log(selectedServiceAttrVals)
         const serviceVariantVals: CreateServiceVariantSchema = {
             serviceId: serviceId,
-            fee: 100,
+            fee: fee,
             serviceAttributeValueIds: selectedServiceAttrVals.map(val => val.ServiceAttrValId)
         }
 
@@ -48,21 +51,28 @@ export default function CreateServiceVariant() {
     // we need to know all the lines for a given service
     function getAllServiceLines (serviceId:string) {
         feeScheduleApi.getServiceAttributeLines(serviceId).then((response: AxiosResponse) => {
-            console.log(response);
             setServiceLines(response.data.service_lines);
+            var serviceAttrValsToSelect:SelectedServiceAttrVal[] = [];
+            for (var line of response.data.service_lines){
+                feeScheduleApi.getServiceAttrVals(line.id).then((response: AxiosResponse) => {
+                    const lineAttrVals:ServiceAttributeValue[] = response.data.attribute_values
+                    setServiceAttrVals(serviceAttrVals.concat(lineAttrVals));
+                    const serviceAttrValToSelect:SelectedServiceAttrVal = {
+                        LineId: line.id,
+                        ServiceAttrValId: lineAttrVals[0].id
+                    }
+                    serviceAttrValsToSelect.push(serviceAttrValToSelect)
+                })
+                .catch((error: any) => {
+                    console.log(error);
+                });
+            }
+            console.log(serviceAttrValsToSelect)
+            setSelectedServiceAttrVals(serviceAttrValsToSelect);
         })
         .catch((error: any) => {
             console.log(error);
         });
-        
-        for (var line of serviceLines){
-            feeScheduleApi.getServiceAttrVals(line.id).then((response: AxiosResponse) => {
-                setServiceAttrVals(serviceAttrVals.concat(response.data.attribute_values));
-            })
-            .catch((error: any) => {
-                console.log(error);
-            });
-        }
     }
 
     function renderLineAttrs (line:ServiceAttributeLineResponse) {
@@ -82,12 +92,12 @@ export default function CreateServiceVariant() {
         if (serviceLines) {
             lineOptions = serviceLines.map(function(serviceLine, i) {
                     return (
-                        <div>
-                            <p>{serviceLine.attribute_title}</p>
+                        <Form.Group className="mb-3">
+                            <Form.Label>{serviceLine.attribute_title}</Form.Label>
                             <Form.Select aria-label="Default select example" onChange={(e) => onServiceAttrValsChange(e, serviceLine.id)}>
                                 {renderLineAttrs(serviceLine)}
                             </Form.Select>
-                        </div>
+                        </Form.Group>
                     )
                 }
             )
@@ -133,6 +143,10 @@ export default function CreateServiceVariant() {
         setSelectedServiceAttrVals(newSelectedAttrVals)
     }
 
+    function onFeeChange(e: ChangeEvent<HTMLInputElement>) {
+        setFee(parseFloat(e.target.value))
+    }
+
     function onServiceIdChange(e: ChangeEvent<HTMLSelectElement>) {
         const serviceId:string = e.target.value;
         setServiceId(serviceId)
@@ -142,12 +156,17 @@ export default function CreateServiceVariant() {
     return (
         <Container className="mt-5 w-50">
             <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3">
+                    <Form.Label>Service</Form.Label>
                     <Form.Select aria-label="Default select example" onChange={onServiceIdChange}>
                         {serviceOptions}
                     </Form.Select>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Variant State Cost</Form.Label>
+                    <Form.Control type="number" onChange={onFeeChange} placeholder="100.00" />
+                </Form.Group>
+                <Form.Group className="mb-3">
                     {renderServiceAttrLines()}
                 </Form.Group>
                 <Button onClick={createServiceVariant}>Submit</Button>
