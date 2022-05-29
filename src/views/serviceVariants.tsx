@@ -49,6 +49,7 @@ export default function ServiceVariants() {
                 return (
                     <ListGroup.Item>
                         {serviceVariant.fee}
+                        {serviceVariant.service_attribute_vals}
                         <ModalComp
                             message={"Are you sure you want to delete variant?"}
                             header={DELETE_SERVICE_MODAL_HEADER}

@@ -281,6 +281,12 @@ export interface VariantResponse {
      * @memberof VariantResponse
      */
     'serviceId': string;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof VariantResponse
+     */
+    'service_attribute_vals'?: Array<string>;
 }
 
 /**
