@@ -25,13 +25,12 @@ export default function ServiceVariants() {
     //     });
     // }
 
-    function deleteServiceVariant(variantId:string) {
-        feeScheduleApi.deleteVariant(variantId).then((response: AxiosResponse) => {
-            console.log(response);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
+    async function deleteServiceVariant(variantId:string) {
+        try {
+            await feeScheduleApi.deleteVariant(variantId);
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     React.useEffect(() => {

@@ -12,13 +12,12 @@ export default function Attributes() {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [attributes, setAttributes] = React.useState<ServiceResponse[]>([]);
 
-    function deleteAttribute(attrId:string) {
-        feeScheduleApi.deleteAttribute(attrId).then((response: AxiosResponse) => {
-            console.log(response);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
+    async function deleteAttribute(attrId:string) {
+        try {
+            await feeScheduleApi.deleteAttribute(attrId);
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     React.useEffect(() => {
@@ -30,9 +29,9 @@ export default function Attributes() {
         });
     }, [])
 
-    if (!attributes) return null;
-
-    var listItems = attributes.map(function(attribute, i) {
+    var listItems;
+    if (attributes) {
+        listItems = attributes.map(function(attribute, i) {
             return (
                 <ListGroup.Item>
                     {attribute.title}
@@ -45,8 +44,8 @@ export default function Attributes() {
                     />
                 </ListGroup.Item>
             )
-        }
-    )
+        })
+    }
 
     return (
         <Container className="mt-5">

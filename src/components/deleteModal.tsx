@@ -14,6 +14,16 @@ export default function ModalComp(props:Props) {
     const [visible, setVisible] = React.useState(false);
     const handleOpen = () => (setVisible(true));
     const handleClose = () => (setVisible(false));
+
+    async function handleContinue() {
+      handleClose();
+      await props.callback(props.resourceId);
+      refreshPage();
+    }
+
+    function refreshPage() {
+      window.location.reload();
+    }
   
     return (
       <>
@@ -31,7 +41,7 @@ export default function ModalComp(props:Props) {
             <Button variant="secondary" onClick={handleClose}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={(e: React.MouseEvent<HTMLButtonElement>) => {handleClose();props.callback(props.resourceId)}}>
+            <Button variant="primary" onClick={(e: React.MouseEvent<HTMLButtonElement>) => {handleContinue()}}>
               Continue
             </Button>
           </Modal.Footer>
