@@ -54,18 +54,11 @@ export default function CreateServiceVariant() {
             setServiceLines(response.data.service_lines);
             var serviceAttrValsToSelect:SelectedServiceAttrVal[] = [];
             for (var line of response.data.service_lines){
-                feeScheduleApi.getServiceAttrVals(line.id).then((response: AxiosResponse) => {
-                    const lineAttrVals:ServiceAttributeValue[] = response.data.attribute_values
-                    setServiceAttrVals(serviceAttrVals.concat(lineAttrVals));
-                    const serviceAttrValToSelect:SelectedServiceAttrVal = {
-                        LineId: line.id,
-                        ServiceAttrValId: lineAttrVals[0].id
-                    }
-                    serviceAttrValsToSelect.push(serviceAttrValToSelect)
-                })
-                .catch((error: any) => {
-                    console.log(error);
-                });
+                const serviceAttrValToSelect:SelectedServiceAttrVal = {
+                    LineId: line.id,
+                    ServiceAttrValId: line.service_attribute_values[0].id
+                }
+                serviceAttrValsToSelect.push(serviceAttrValToSelect)
             }
             console.log(serviceAttrValsToSelect)
             setSelectedServiceAttrVals(serviceAttrValsToSelect);
@@ -124,6 +117,7 @@ export default function CreateServiceVariant() {
             LineId: serviceLineId,
             ServiceAttrValId: serviceAttrValId
         }
+        console.log(selectedServiceAttrVals)
         for (var selectedServiceAttrVal of selectedServiceAttrVals) {
             if (selectedServiceAttrVal.LineId == serviceLineId)
             {
@@ -135,10 +129,12 @@ export default function CreateServiceVariant() {
                 newSelectedAttrVals.push(selectedServiceAttrVal)
             }
         }
+
+        console.log(newSelectedAttrVals)
         
-        if (!newSelectedAttrValPreset) {
-            newSelectedAttrVals.push(newSelectedAttrVal)
-        }
+        // if (!newSelectedAttrValPreset) {
+        //     newSelectedAttrVals.push(newSelectedAttrVal)
+        // }
 
         setSelectedServiceAttrVals(newSelectedAttrVals)
     }

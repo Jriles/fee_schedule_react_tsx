@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup } from "react-bootstrap";
+import { Button, Container, ListGroup, Table } from "react-bootstrap";
 import { feeScheduleApi } from "../components/feeScheduleApi";
 import { ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
@@ -43,20 +43,29 @@ export default function ServiceVariants() {
         });
     }, [])
 
-    var listItems:any = [];
+    var tableItems:any = [];
     if (serviceVariants) {
-        listItems = serviceVariants.map(function(serviceVariant, i) {
+        tableItems = serviceVariants.map(function(serviceVariant, i) {
                 return (
-                    <ListGroup.Item>
-                        {serviceVariant.fee}
-                        {serviceVariant.service_attribute_vals}
-                        <ModalComp
-                            message={"Are you sure you want to delete variant?"}
-                            header={DELETE_SERVICE_MODAL_HEADER}
-                            callback={deleteServiceVariant}
-                            resourceId={serviceVariant.id}
-                        />
-                    </ListGroup.Item>
+                    <tr>
+                        <td>
+                            {serviceVariant.service_name}
+                        </td>
+                        <td>
+                            {serviceVariant.fee}
+                        </td>
+                        <td>
+                            {serviceVariant.service_attribute_vals?.join(', ')}
+                        </td>
+                        <td>
+                            <ModalComp
+                                message={"Are you sure you want to delete variant?"}
+                                header={DELETE_SERVICE_MODAL_HEADER}
+                                callback={deleteServiceVariant}
+                                resourceId={serviceVariant.id}
+                            />
+                        </td>
+                    </tr>
                 )
             }
         )
@@ -67,9 +76,18 @@ export default function ServiceVariants() {
             <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
                 <Button className="mb-5">Create Service Variant</Button>
             </Link>
-            <ListGroup>
-                {listItems}
-            </ListGroup>
+            <Table>
+                <thead>
+                    <tr>
+                        <th>Service</th>
+                        <th>State Cost</th>
+                        <th>Variant Values</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tableItems}
+                </tbody>
+            </Table>
         </Container>
     )
 }

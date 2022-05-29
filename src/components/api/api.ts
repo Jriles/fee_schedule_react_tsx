@@ -280,13 +280,19 @@ export interface VariantResponse {
      * @type {string}
      * @memberof VariantResponse
      */
-    'serviceId': string;
+    'service_id': string;
     /**
      * 
      * @type {Array<string>}
      * @memberof VariantResponse
      */
     'service_attribute_vals'?: Array<string>;
+    /**
+     * 
+     * @type {string}
+     * @memberof VariantResponse
+     */
+    'service_name'?: string;
 }
 
 /**
