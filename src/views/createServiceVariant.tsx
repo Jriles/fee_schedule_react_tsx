@@ -6,6 +6,11 @@ import React, { ChangeEvent, ChangeEventHandler } from "react";
 import { Link } from "react-router-dom";
 
 export default function CreateServiceVariant() {
+    interface SelectedServiceAttrVal {
+        //where the val here is the service attr val id
+        LineId: string,
+        ServiceAttrValId: string
+    }
     const [res, setRes] = React.useState("");
     const [serviceTitle, setServiceTitle] = React.useState("");
     const [serviceId, setServiceId] = React.useState("");
@@ -13,11 +18,6 @@ export default function CreateServiceVariant() {
     const [serviceLines, setServiceLines] = React.useState<ServiceAttributeLineResponse[]>([]);
     const [serviceAttrVals, setServiceAttrVals] = React.useState<ServiceAttributeValue[]>([]);
     const [fee, setFee] = React.useState(0.0);
-    interface SelectedServiceAttrVal {
-        //where the val here is the service attr val id
-        LineId: string,
-        ServiceAttrValId: string
-    }
     const [selectedServiceAttrVals, setSelectedServiceAttrVals] = React.useState<SelectedServiceAttrVal[]>([]);
 
     React.useEffect(() => {
@@ -32,7 +32,6 @@ export default function CreateServiceVariant() {
     }, [])
 
     function createServiceVariant() {
-        console.log(selectedServiceAttrVals)
         const serviceVariantVals: CreateServiceVariantSchema = {
             serviceId: serviceId,
             fee: fee,
@@ -40,7 +39,6 @@ export default function CreateServiceVariant() {
         }
 
         feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
-            console.log(response);
             setRes(response.statusText);
         })
         .catch((error: any) => {
@@ -60,7 +58,6 @@ export default function CreateServiceVariant() {
                 }
                 serviceAttrValsToSelect.push(serviceAttrValToSelect)
             }
-            console.log(serviceAttrValsToSelect)
             setSelectedServiceAttrVals(serviceAttrValsToSelect);
         })
         .catch((error: any) => {
@@ -99,16 +96,6 @@ export default function CreateServiceVariant() {
         return null
     }
 
-    var serviceOptions:any = [];
-    if (services) {
-        serviceOptions = services.map(function(service, i) {
-                return (
-                    <option value={service.id}>{service.title}</option>
-                )
-            }
-        )
-    }
-
     function onServiceAttrValsChange(e: ChangeEvent<HTMLSelectElement>, serviceLineId: string) {
         const serviceAttrValId:string = e.target.value;
         var newSelectedAttrVals = [];
@@ -117,7 +104,6 @@ export default function CreateServiceVariant() {
             LineId: serviceLineId,
             ServiceAttrValId: serviceAttrValId
         }
-        console.log(selectedServiceAttrVals)
         for (var selectedServiceAttrVal of selectedServiceAttrVals) {
             if (selectedServiceAttrVal.LineId == serviceLineId)
             {
@@ -128,13 +114,7 @@ export default function CreateServiceVariant() {
             {
                 newSelectedAttrVals.push(selectedServiceAttrVal)
             }
-        }
-
-        console.log(newSelectedAttrVals)
-        
-        // if (!newSelectedAttrValPreset) {
-        //     newSelectedAttrVals.push(newSelectedAttrVal)
-        // }
+        }        
 
         setSelectedServiceAttrVals(newSelectedAttrVals)
     }
@@ -147,6 +127,16 @@ export default function CreateServiceVariant() {
         const serviceId:string = e.target.value;
         setServiceId(serviceId)
         getAllServiceLines(serviceId)
+    }
+
+    var serviceOptions:any = [];
+    if (services) {
+        serviceOptions = services.map(function(service, i) {
+                return (
+                    <option value={service.id}>{service.title}</option>
+                )
+            }
+        )
     }
 
     return (

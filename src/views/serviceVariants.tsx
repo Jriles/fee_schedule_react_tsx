@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup, Table } from "react-bootstrap";
+import { Button, Container, ListGroup, Pagination, Table } from "react-bootstrap";
 import { feeScheduleApi } from "../components/feeScheduleApi";
 import { ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
@@ -12,27 +12,6 @@ export default function ServiceVariants() {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
 
-    // function updateService(newTitle:string,serviceId:string) {
-    //     const serviceVals: UpdateServiceSchema = {
-    //         title: newTitle
-    //     }
-
-    //     feeScheduleApi.updateService(serviceId,serviceVals).then((response: AxiosResponse) => {
-    //         console.log(response);
-    //     })
-    //     .catch((error: any) => {
-    //         console.log(error);
-    //     });
-    // }
-
-    async function deleteServiceVariant(variantId:string) {
-        try {
-            await feeScheduleApi.deleteVariant(variantId);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     React.useEffect(() => {
         feeScheduleApi.getVariants().then((response: AxiosResponse) => {
             setServiceVariants(response.data.service_variants);
@@ -42,32 +21,49 @@ export default function ServiceVariants() {
         });
     }, [])
 
+    async function deleteServiceVariant(variantId:string) {
+        try {
+            await feeScheduleApi.deleteVariant(variantId);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     var tableItems:any = [];
     if (serviceVariants) {
         tableItems = serviceVariants.map(function(serviceVariant, i) {
-                return (
-                    <tr>
-                        <td>
-                            {serviceVariant.service_name}
-                        </td>
-                        <td>
-                            {serviceVariant.fee}
-                        </td>
-                        <td>
-                            {serviceVariant.service_attribute_vals?.join(', ')}
-                        </td>
-                        <td>
-                            <ModalComp
-                                message={"Are you sure you want to delete variant?"}
-                                header={DELETE_SERVICE_MODAL_HEADER}
-                                callback={deleteServiceVariant}
-                                resourceId={serviceVariant.id}
-                            />
-                        </td>
-                    </tr>
-                )
-            }
-        )
+            return (
+                <tr>
+                    <td>
+                        {serviceVariant.service_name}
+                    </td>
+                    <td>
+                        {serviceVariant.fee}
+                    </td>
+                    <td>
+                        {serviceVariant.service_attribute_vals?.join(', ')}
+                    </td>
+                    <td>
+                        <ModalComp
+                            message={"Are you sure you want to delete variant?"}
+                            header={DELETE_SERVICE_MODAL_HEADER}
+                            callback={deleteServiceVariant}
+                            resourceId={serviceVariant.id}
+                        />
+                    </td>
+                </tr>
+            )
+        })
+    }
+
+    let active = 2;
+    let items = [];
+    for (let number = 1; number <= 5; number++) {
+        items.push(
+            <Pagination.Item key={number} active={number === active}>
+            {number}
+            </Pagination.Item>,
+        );
     }
 
     return (
@@ -87,6 +83,7 @@ export default function ServiceVariants() {
                     {tableItems}
                 </tbody>
             </Table>
+            <Pagination>{items}</Pagination>
         </Container>
     )
 }
