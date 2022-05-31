@@ -68,6 +68,7 @@ export default function ServiceVariants() {
 
     return (
         <Container className="mt-5">
+            <h1 className="mb-4">Service Variants</h1>
             <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
                 <Button className="mb-5">Create Service Variant</Button>
             </Link>

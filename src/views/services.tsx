@@ -12,27 +12,6 @@ export default function Services() {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
 
-    function updateService(newTitle:string,serviceId:string) {
-        const serviceVals: UpdateServiceSchema = {
-            title: newTitle
-        }
-
-        feeScheduleApi.updateService(serviceId,serviceVals).then((response: AxiosResponse) => {
-            console.log(response);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
-    }
-
-    async function deleteService(serviceId:string) {
-        try {
-            await feeScheduleApi.deleteService(serviceId);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     React.useEffect(() => {
         feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
@@ -42,12 +21,20 @@ export default function Services() {
         });
     }, [])
 
+    async function deleteService(serviceId:string) {
+        try {
+            await feeScheduleApi.deleteService(serviceId);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     var listItems;
     if (services) {
         listItems = services.map(function(service, i) {
                 return (
                     <ListGroup.Item>
-                        <EditValueOnClick submitChangeFunction={updateService} value={service.title} id={service.id}></EditValueOnClick>
+                        <Link to={service.id} className="text-black" style={{ textDecoration: 'none' }}>{service.title}</Link>
                         <ModalComp
                             message={"Are you sure you want to delete service " + service.title + "?"}
                             header={DELETE_SERVICE_MODAL_HEADER}
@@ -61,6 +48,7 @@ export default function Services() {
     }
     return (
         <Container className="mt-5">
+            <h1 className="mb-4">Services</h1>
             <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
                 <Button className="mb-5">Create Service</Button>
             </Link>

@@ -12,14 +12,6 @@ export default function Attributes() {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [attributes, setAttributes] = React.useState<ServiceResponse[]>([]);
 
-    async function deleteAttribute(attrId:string) {
-        try {
-            await feeScheduleApi.deleteAttribute(attrId);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
     React.useEffect(() => {
         feeScheduleApi.getAllAttributes().then((response: AxiosResponse) => {
             setAttributes(response.data.attributes);
@@ -28,6 +20,14 @@ export default function Attributes() {
             console.log(error);
         });
     }, [])
+
+    async function deleteAttribute(attrId:string) {
+        try {
+            await feeScheduleApi.deleteAttribute(attrId);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     var listItems;
     if (attributes) {
@@ -49,6 +49,7 @@ export default function Attributes() {
 
     return (
         <Container className="mt-5">
+            <h1 className="mb-4">Attributes</h1>
             <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
                 <Button className="mb-5">Create Attribute</Button>
             </Link>
