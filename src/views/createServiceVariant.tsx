@@ -23,8 +23,9 @@ export default function CreateServiceVariant() {
     React.useEffect(() => {
         feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
-            setServiceId(services[0].id)
-            getAllServiceLines(serviceId)
+            console.log(response.data.services)
+            setServiceId(response.data.services[0].id)
+            getAllServiceLines(response.data.services[0].id)
         })
         .catch((error: any) => {
             console.log(error);

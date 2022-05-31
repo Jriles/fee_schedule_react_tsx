@@ -12,16 +12,15 @@ export default function CreateServiceAttributeValue() {
     const [res, setRes] = React.useState("");
     const [attributeValues, setAttributeValues] = React.useState<AttributeValueResponse[]>([]);
     const [attributeTitle, setAttributeTitle] = React.useState("");
-    const [attributeId, setAttributeId] = React.useState("");
     const [selectedAttributeValueId, setSelectedAttributeValueId] = React.useState("");
     let { lineId } = useParams<ServiceAttributeValueParams>();
 
     React.useEffect(() => {
         feeScheduleApi.getServiceAttributeLine(lineId ?? "").then((response: AxiosResponse) => {
             setAttributeTitle(response.data.attribute_title)
-            setAttributeId(response.data.attribute_id)
-            feeScheduleApi.getAllAttributeValues(attributeId).then((response: AxiosResponse) => {
+            feeScheduleApi.getAllAttributeValues(response.data.attribute_id).then((response: AxiosResponse) => {
                 setAttributeValues(response.data.attribute_values);
+                setSelectedAttributeValueId(response.data.attribute_values[0].id)
             })
             .catch((error: any) => {
                 console.log(error);
