@@ -823,6 +823,39 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
             };
         },
         /**
+         * Get an attribute from its id.
+         * @param {string} attributeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAttribute: async (attributeId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'attributeId' is not null or undefined
+            assertParamExists('getAttribute', 'attributeId', attributeId)
+            const localVarPath = `/attributes/{attributeId}`
+                .replace(`{${"attributeId"}}`, encodeURIComponent(String(attributeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
          * Get one service\'s details
          * @param {string} serviceId 
          * @param {*} [options] Override http request option.
@@ -1297,7 +1330,7 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getAllAttributes(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<AttributeResponse>>> {
+        async getAllAttributes(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllAttributes(options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
@@ -1308,6 +1341,16 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          */
         async getAllServices(options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<object>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getAllServices(options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * Get an attribute from its id.
+         * @param {string} attributeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getAttribute(attributeId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<AttributeResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getAttribute(attributeId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1549,7 +1592,7 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getAllAttributes(options?: any): AxiosPromise<Array<AttributeResponse>> {
+        getAllAttributes(options?: any): AxiosPromise<Array<object>> {
             return localVarFp.getAllAttributes(options).then((request) => request(axios, basePath));
         },
         /**
@@ -1559,6 +1602,15 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          */
         getAllServices(options?: any): AxiosPromise<Array<object>> {
             return localVarFp.getAllServices(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * Get an attribute from its id.
+         * @param {string} attributeId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getAttribute(attributeId: string, options?: any): AxiosPromise<AttributeResponse> {
+            return localVarFp.getAttribute(attributeId, options).then((request) => request(axios, basePath));
         },
         /**
          * Get one service\'s details
@@ -1829,6 +1881,17 @@ export class DefaultApi extends BaseAPI {
      */
     public getAllServices(options?: AxiosRequestConfig) {
         return DefaultApiFp(this.configuration).getAllServices(options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * Get an attribute from its id.
+     * @param {string} attributeId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public getAttribute(attributeId: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getAttribute(attributeId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

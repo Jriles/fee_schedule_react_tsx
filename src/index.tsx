@@ -17,6 +17,8 @@ import CreateServiceVariant from './views/createServiceVariant';
 import ServiceLines from './views/serviceLines';
 import ServiceAttributeValues from './views/serviceLineAttributes';
 import CreateServiceAttributeValue from './views/createServiceAttributeValue';
+import AttributeValues from './views/attributeValues';
+import CreateAttributeValue from './views/createAttributeValue';
 
 
 const root = ReactDOM.createRoot(
@@ -36,6 +38,8 @@ root.render(
       <Route path="/service_variants" element={<ServiceVariants/>}/>
       <Route path="/service_variants/create" element={<CreateServiceVariant/>}/>
       <Route path="/attributes" element={<Attributes/>}/>
+      <Route path="/attributes/:attributeId" element={<AttributeValues/>}/>
+      <Route path="/attributes/:attributeId/create" element={<CreateAttributeValue/>}/>
       <Route path="/attributes/create" element={<CreateAttribute/>}/>
     </Routes>
   </BrowserRouter>

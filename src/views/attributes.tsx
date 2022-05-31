@@ -34,7 +34,7 @@ export default function Attributes() {
         listItems = attributes.map(function(attribute, i) {
             return (
                 <ListGroup.Item>
-                    {attribute.title}
+                    <Link to={attribute.id}>{attribute.title}</Link>
                     {/* <EditValueOnClick submitChangeFunction={updateService} value={service.title} id={service.id}></EditValueOnClick> */}
                     <ModalComp
                         message={"Are you sure you want to delete attribute " + attribute.title + "?"}
