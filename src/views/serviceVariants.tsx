@@ -11,9 +11,10 @@ import ModalComp from "../components/deleteModal";
 export default function ServiceVariants() {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
+    const [pageNum, setPageNum] = React.useState(1);
 
     React.useEffect(() => {
-        feeScheduleApi.getVariants().then((response: AxiosResponse) => {
+        feeScheduleApi.getVariants([],pageNum).then((response: AxiosResponse) => {
             setServiceVariants(response.data.service_variants);
         })
         .catch((error: any) => {
@@ -56,11 +57,20 @@ export default function ServiceVariants() {
         })
     }
 
-    let active = 2;
+    function onPageChange(newPageNum:number) {
+        setPageNum(newPageNum)
+        feeScheduleApi.getVariants([],newPageNum).then((response: AxiosResponse) => {
+            setServiceVariants(response.data.service_variants);
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
+    }
+
     let items = [];
     for (let number = 1; number <= 5; number++) {
         items.push(
-            <Pagination.Item key={number} active={number === active}>
+            <Pagination.Item onClick={() => onPageChange(number)} key={number} active={number === pageNum}>
             {number}
             </Pagination.Item>,
         );

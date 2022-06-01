@@ -1028,10 +1028,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * 
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
          * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariants: async (serviceAttributeValueIds?: Array<string>, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getVariants: async (serviceAttributeValueIds?: Array<string>, pageNumber?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/service_variants/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1046,6 +1047,10 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
             if (serviceAttributeValueIds) {
                 localVarQueryParameter['serviceAttributeValueIds[]'] = serviceAttributeValueIds;
+            }
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['page_number'] = pageNumber;
             }
 
 
@@ -1411,11 +1416,12 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * 
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
          * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getVariants(serviceAttributeValueIds?: Array<string>, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(serviceAttributeValueIds, options);
+        async getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(serviceAttributeValueIds, pageNumber, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1665,11 +1671,12 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * 
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
          * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariants(serviceAttributeValueIds?: Array<string>, options?: any): AxiosPromise<VariantResponse> {
-            return localVarFp.getVariants(serviceAttributeValueIds, options).then((request) => request(axios, basePath));
+        getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, options?: any): AxiosPromise<VariantResponse> {
+            return localVarFp.getVariants(serviceAttributeValueIds, pageNumber, options).then((request) => request(axios, basePath));
         },
         /**
          * Update an attribute\'s name or other details. But not the attribute values.
@@ -1957,12 +1964,13 @@ export class DefaultApi extends BaseAPI {
      * 
      * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
      * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+     * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getVariants(serviceAttributeValueIds?: Array<string>, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getVariants(serviceAttributeValueIds, options).then((request) => request(this.axios, this.basePath));
+    public getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getVariants(serviceAttributeValueIds, pageNumber, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
