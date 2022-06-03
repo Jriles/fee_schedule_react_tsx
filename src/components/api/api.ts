@@ -128,19 +128,25 @@ export interface CreateServiceVariantSchema {
      * @type {string}
      * @memberof CreateServiceVariantSchema
      */
-    'serviceId': string;
+    'service_id': string;
     /**
      * 
      * @type {number}
      * @memberof CreateServiceVariantSchema
      */
-    'fee': number;
+    'state_cost': number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateServiceVariantSchema
+     */
+    'per_page_state_cost'?: number;
     /**
      * 
      * @type {Array<string>}
      * @memberof CreateServiceVariantSchema
      */
-    'serviceAttributeValueIds': Array<string>;
+    'service_attribute_value_ids': Array<string>;
 }
 /**
  * 
@@ -280,7 +286,7 @@ export interface VariantResponse {
      * @type {number}
      * @memberof VariantResponse
      */
-    'fee': number;
+    'state_cost': number;
     /**
      * 
      * @type {string}
@@ -299,6 +305,12 @@ export interface VariantResponse {
      * @memberof VariantResponse
      */
     'service_name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof VariantResponse
+     */
+    'per_page_state_cost'?: number;
 }
 
 /**

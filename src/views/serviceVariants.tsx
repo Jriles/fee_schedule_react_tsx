@@ -39,7 +39,10 @@ export default function ServiceVariants() {
                         {serviceVariant.service_name}
                     </td>
                     <td>
-                        {serviceVariant.fee}
+                        ${serviceVariant.state_cost}
+                    </td>
+                    <td>
+                        ${serviceVariant.per_page_state_cost}
                     </td>
                     <td>
                         {serviceVariant.service_attribute_vals?.join(', ')}
@@ -87,6 +90,7 @@ export default function ServiceVariants() {
                     <tr>
                         <th>Service</th>
                         <th>State Cost</th>
+                        <th>Per Page State Cost</th>
                         <th>Variant Values</th>
                     </tr>
                 </thead>

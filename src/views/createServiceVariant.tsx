@@ -12,18 +12,16 @@ export default function CreateServiceVariant() {
         ServiceAttrValId: string
     }
     const [res, setRes] = React.useState("");
-    const [serviceTitle, setServiceTitle] = React.useState("");
     const [serviceId, setServiceId] = React.useState("");
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
     const [serviceLines, setServiceLines] = React.useState<ServiceAttributeLineResponse[]>([]);
-    const [serviceAttrVals, setServiceAttrVals] = React.useState<ServiceAttributeValue[]>([]);
     const [fee, setFee] = React.useState(0.0);
+    const [perPageStateCost, setPerPageStateCost] = React.useState(0.0);
     const [selectedServiceAttrVals, setSelectedServiceAttrVals] = React.useState<SelectedServiceAttrVal[]>([]);
 
     React.useEffect(() => {
         feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
-            console.log(response.data.services)
             setServiceId(response.data.services[0].id)
             getAllServiceLines(response.data.services[0].id)
         })
@@ -34,9 +32,10 @@ export default function CreateServiceVariant() {
 
     function createServiceVariant() {
         const serviceVariantVals: CreateServiceVariantSchema = {
-            serviceId: serviceId,
-            fee: fee,
-            serviceAttributeValueIds: selectedServiceAttrVals.map(val => val.ServiceAttrValId)
+            service_id: serviceId,
+            state_cost: fee,
+            service_attribute_value_ids: selectedServiceAttrVals.map(val => val.ServiceAttrValId),
+            per_page_state_cost: perPageStateCost
         }
 
         feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
@@ -124,6 +123,10 @@ export default function CreateServiceVariant() {
         setFee(parseFloat(e.target.value))
     }
 
+    function onPerPageStateCostChange(e: ChangeEvent<HTMLInputElement>) {
+        setPerPageStateCost(parseFloat(e.target.value))
+    }
+
     function onServiceIdChange(e: ChangeEvent<HTMLSelectElement>) {
         const serviceId:string = e.target.value;
         setServiceId(serviceId)
@@ -150,8 +153,12 @@ export default function CreateServiceVariant() {
                     </Form.Select>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Variant State Cost</Form.Label>
+                    <Form.Label>State Cost</Form.Label>
                     <Form.Control type="number" onChange={onFeeChange} placeholder="100.00" />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="formBasicEmail">
+                    <Form.Label>Per Page State Cost (Optional)</Form.Label>
+                    <Form.Control type="number" onChange={onPerPageStateCostChange} placeholder="100.00" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     {renderServiceAttrLines()}
