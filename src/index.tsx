@@ -20,6 +20,7 @@ import CreateServiceAttributeValue from './views/createServiceAttributeValue';
 import AttributeValues from './views/attributeValues';
 import CreateAttributeValue from './views/createAttributeValue';
 import CreateServiceAttributeLine from './views/createServiceLine';
+import LoginForm from './views/loginForm';
 
 
 const root = ReactDOM.createRoot(
@@ -43,6 +44,7 @@ root.render(
       <Route path="/attributes/:attributeId" element={<AttributeValues/>}/>
       <Route path="/attributes/:attributeId/create" element={<CreateAttributeValue/>}/>
       <Route path="/attributes/create" element={<CreateAttribute/>}/>
+      <Route path="/login" element={<LoginForm/>}/>
     </Routes>
   </BrowserRouter>
 );
