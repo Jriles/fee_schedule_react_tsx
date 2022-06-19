@@ -151,6 +151,31 @@ export interface CreateServiceVariantSchema {
 /**
  * 
  * @export
+ * @interface LoginSchema
+ */
+export interface LoginSchema {
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginSchema
+     */
+    'username': string;
+    /**
+     * 
+     * @type {string}
+     * @memberof LoginSchema
+     */
+    'password': string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof LoginSchema
+     */
+    'remember_me': boolean;
+}
+/**
+ * 
+ * @export
  * @interface ServiceAttributeLineResponse
  */
 export interface ServiceAttributeLineResponse {
@@ -216,6 +241,19 @@ export interface ServiceResponse {
      * @memberof ServiceResponse
      */
     'title': string;
+}
+/**
+ * 
+ * @export
+ * @interface SuccessfulLoginResponse
+ */
+export interface SuccessfulLoginResponse {
+    /**
+     * 
+     * @type {string}
+     * @memberof SuccessfulLoginResponse
+     */
+    'session_token'?: string;
 }
 /**
  * 
@@ -1041,10 +1079,11 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
          * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
          * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
+         * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariants: async (serviceAttributeValueIds?: Array<string>, pageNumber?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getVariants: async (serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/service_variants/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1065,11 +1104,51 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
                 localVarQueryParameter['page_number'] = pageNumber;
             }
 
+            if (filingPageCount !== undefined) {
+                localVarQueryParameter['filing_page_count'] = filingPageCount;
+            }
+
 
     
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Login a user using username and password.
+         * @param {LoginSchema} loginSchema 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login: async (loginSchema: LoginSchema, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'loginSchema' is not null or undefined
+            assertParamExists('login', 'loginSchema', loginSchema)
+            const localVarPath = `/login`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(loginSchema, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -1429,11 +1508,23 @@ export const DefaultApiFp = function(configuration?: Configuration) {
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
          * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
          * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
+         * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(serviceAttributeValueIds, pageNumber, options);
+        async getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(serviceAttributeValueIds, pageNumber, filingPageCount, options);
+            return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
+        },
+        /**
+         * 
+         * @summary Login a user using username and password.
+         * @param {LoginSchema} loginSchema 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async login(loginSchema: LoginSchema, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<SuccessfulLoginResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.login(loginSchema, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1684,11 +1775,22 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
          * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
          * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
+         * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, options?: any): AxiosPromise<VariantResponse> {
-            return localVarFp.getVariants(serviceAttributeValueIds, pageNumber, options).then((request) => request(axios, basePath));
+        getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options?: any): AxiosPromise<VariantResponse> {
+            return localVarFp.getVariants(serviceAttributeValueIds, pageNumber, filingPageCount, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Login a user using username and password.
+         * @param {LoginSchema} loginSchema 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        login(loginSchema: LoginSchema, options?: any): AxiosPromise<SuccessfulLoginResponse> {
+            return localVarFp.login(loginSchema, options).then((request) => request(axios, basePath));
         },
         /**
          * Update an attribute\'s name or other details. But not the attribute values.
@@ -1977,12 +2079,25 @@ export class DefaultApi extends BaseAPI {
      * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
      * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
      * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
+     * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getVariants(serviceAttributeValueIds, pageNumber, options).then((request) => request(this.axios, this.basePath));
+    public getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getVariants(serviceAttributeValueIds, pageNumber, filingPageCount, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Login a user using username and password.
+     * @param {LoginSchema} loginSchema 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof DefaultApi
+     */
+    public login(loginSchema: LoginSchema, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).login(loginSchema, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
