@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { CookiesProvider } from 'react-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
 import {
@@ -29,7 +30,9 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-    <App/>
+    <CookiesProvider>
+      <App/>
+    </CookiesProvider>
     <Routes>
       <Route path="/" element={<Landing />}/>
       <Route path="/services" element={<Services/>}/>

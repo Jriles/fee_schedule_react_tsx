@@ -3,11 +3,13 @@ import { feeScheduleApi } from "../components/feeScheduleApi";
 import { CreateAttributeSchema, LoginSchema } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
+import { useCookies } from "react-cookie";
 
 export default function LoginForm() {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [rememberMe, setRememberMe] = React.useState(false);
+    const [cookies, setCookie] = useCookies(['sessionToken']);
 
     function login() {
         const loginVals: LoginSchema = {
@@ -17,6 +19,7 @@ export default function LoginForm() {
         }
         feeScheduleApi.login(loginVals).then((response: AxiosResponse) => {
             console.log(response);
+            setCookie('sessionToken', response.data.session_token)
         })
         .catch((error: any) => {
             console.log(error);
