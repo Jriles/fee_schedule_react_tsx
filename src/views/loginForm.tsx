@@ -18,7 +18,6 @@ export default function LoginForm() {
             remember_me: rememberMe
         }
         feeScheduleApi.login(loginVals).then((response: AxiosResponse) => {
-            console.log(response);
             setCookie('sessionToken', response.data.session_token)
         })
         .catch((error: any) => {
