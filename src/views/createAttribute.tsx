@@ -1,10 +1,13 @@
 import { Button, Container, Form, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { CreateAttributeSchema } from '../components/api/api';
+import { CreateAttributeSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
 
-export default function CreateAttribute() {
+interface CreateAttributeProps {
+    feeScheduleApi: DefaultApi;
+}
+
+export default function CreateAttribute(props:CreateAttributeProps) {
     const [res, setRes] = React.useState("");
     const [attributeTitle, setattributeTitle] = React.useState("");
 
@@ -13,7 +16,7 @@ export default function CreateAttribute() {
             title: attributeTitle
         }
 
-        feeScheduleApi.createAttribute(attr).then((response: AxiosResponse) => {
+        props.feeScheduleApi.createAttribute(attr).then((response: AxiosResponse) => {
             console.log(response);
             setRes(response.statusText);
         })

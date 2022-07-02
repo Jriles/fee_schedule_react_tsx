@@ -1,13 +1,15 @@
 import { Button, Container, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { AttributeValueResponse } from '../components/api/api';
+import { AttributeValueResponse, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import ModalComp from "../components/deleteModal";
 
+interface AttributeValuesProps {
+    feeScheduleApi: DefaultApi;
+}
 
-export default function AttributeValues() {
+export default function AttributeValues(props:AttributeValuesProps) {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Attribute Value?";
     const DELETE_SERVICE_LINE_MODAL_BODY = "Are you sure you want to delete attribute value ";
     type AttributeValuesParams = {
@@ -19,13 +21,13 @@ export default function AttributeValues() {
     let { attributeId } = useParams<AttributeValuesParams>();
 
     React.useEffect(() => {
-        feeScheduleApi.getAllAttributeValues(attributeId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAllAttributeValues(attributeId ?? "").then((response: AxiosResponse) => {
             setAttrVals(response.data.attribute_values);
         })
         .catch((error: any) => {
             console.log(error);
         });
-        feeScheduleApi.getAttribute(attributeId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAttribute(attributeId ?? "").then((response: AxiosResponse) => {
             setAttributeTitle(response.data.title)
         })
         .catch((error: any) => {
@@ -35,7 +37,7 @@ export default function AttributeValues() {
 
     async function deleteAttributeVal(valueId:string) {
         try {
-            await feeScheduleApi.deleteAttributeValue(valueId);
+            await props.feeScheduleApi.deleteAttributeValue(valueId);
         } catch (error) {
             console.log(error)
         }

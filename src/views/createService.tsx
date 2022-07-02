@@ -1,11 +1,13 @@
-import { Button, Container, Form, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { CreateServiceSchema } from '../components/api/api';
+import { Button, Container, Form } from "react-bootstrap";
+import { CreateServiceSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React, { ChangeEvent, ChangeEventHandler } from "react";
-import { Link } from "react-router-dom";
+import React, { ChangeEvent } from "react";
 
-export default function CreateService() {
+interface CreateServiceProps {
+    feeScheduleApi: DefaultApi;
+}
+
+export default function CreateService(props:CreateServiceProps) {
     const [res, setRes] = React.useState("");
     const [serviceTitle, setServiceTitle] = React.useState("");
 
@@ -14,7 +16,7 @@ export default function CreateService() {
             title: serviceTitle
         }
 
-        feeScheduleApi.createService(serviceVals).then((response: AxiosResponse) => {
+        props.feeScheduleApi.createService(serviceVals).then((response: AxiosResponse) => {
             console.log(response);
             setRes(response.statusText);
         })

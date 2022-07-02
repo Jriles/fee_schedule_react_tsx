@@ -1,13 +1,15 @@
 import { Button, Container, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { ServiceAttributeLineResponse, ServiceResponse, UpdateServiceSchema } from '../components/api/api';
+import { DefaultApi, ServiceAttributeLineResponse, ServiceResponse, UpdateServiceSchema } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import ModalComp from "../components/deleteModal";
 
+interface ServiceLinesProps {
+    feeScheduleApi: DefaultApi;
+}
 
-export default function ServiceLines() {
+export default function ServiceLines(props:ServiceLinesProps) {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service Line?";
     const DELETE_SERVICE_LINE_MODAL_BODY = "Are you sure you want to delete service line for ";
     type ServiceLineParams = {
@@ -19,14 +21,14 @@ export default function ServiceLines() {
     let { serviceId } = useParams<ServiceLineParams>();
 
     React.useEffect(() => {
-        feeScheduleApi.getService(serviceId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getService(serviceId ?? "").then((response: AxiosResponse) => {
             setServiceTitle(response.data.title);
         })
         .catch((error: any) => {
             console.log(error);
         });
 
-        feeScheduleApi.getServiceAttributeLines(serviceId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getServiceAttributeLines(serviceId ?? "").then((response: AxiosResponse) => {
             setServiceLines(response.data.service_lines);
         })
         .catch((error: any) => {
@@ -36,7 +38,7 @@ export default function ServiceLines() {
 
     async function deleteServiceLine(lineId:string) {
         try {
-            await feeScheduleApi.deleteServiceAttributeLine(lineId);
+            await props.feeScheduleApi.deleteServiceAttributeLine(lineId);
         } catch (error) {
             console.log(error)
         }

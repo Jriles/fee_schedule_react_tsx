@@ -1,19 +1,21 @@
 import { Button, Container, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { ServiceResponse } from '../components/api/api';
+import { DefaultApi, ServiceResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
 import EditValueOnClick from "../components/EditValueOnClick";
 import ModalComp from "../components/deleteModal";
 
+interface AttributesProps {
+    feeScheduleApi: DefaultApi;
+}
 
-export default function Attributes() {
+export default function Attributes(props:AttributesProps) {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [attributes, setAttributes] = React.useState<ServiceResponse[]>([]);
 
     React.useEffect(() => {
-        feeScheduleApi.getAllAttributes().then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAllAttributes().then((response: AxiosResponse) => {
             setAttributes(response.data.attributes);
         })
         .catch((error: any) => {
@@ -23,7 +25,7 @@ export default function Attributes() {
 
     async function deleteAttribute(attrId:string) {
         try {
-            await feeScheduleApi.deleteAttribute(attrId);
+            await props.feeScheduleApi.deleteAttribute(attrId);
         } catch (error) {
             console.log(error)
         }

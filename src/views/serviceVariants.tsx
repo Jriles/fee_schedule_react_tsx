@@ -1,20 +1,22 @@
 import { Button, Container, ListGroup, Pagination, Table } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
+import { DefaultApi, ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
 import EditValueOnClick from "../components/EditValueOnClick";
 import ModalComp from "../components/deleteModal";
 
+interface ServiceVariantsProps {
+    feeScheduleApi: DefaultApi;
+}
 
-export default function ServiceVariants() {
+export default function ServiceVariants(props:ServiceVariantsProps) {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
     const [pageNum, setPageNum] = React.useState(1);
 
     React.useEffect(() => {
-        feeScheduleApi.getVariants([],pageNum).then((response: AxiosResponse) => {
+        props.feeScheduleApi.getVariants([],pageNum).then((response: AxiosResponse) => {
             setServiceVariants(response.data.service_variants);
         })
         .catch((error: any) => {
@@ -24,7 +26,7 @@ export default function ServiceVariants() {
 
     async function deleteServiceVariant(variantId:string) {
         try {
-            await feeScheduleApi.deleteVariant(variantId);
+            await props.feeScheduleApi.deleteVariant(variantId);
         } catch (error) {
             console.log(error)
         }
@@ -62,7 +64,7 @@ export default function ServiceVariants() {
 
     function onPageChange(newPageNum:number) {
         setPageNum(newPageNum)
-        feeScheduleApi.getVariants([],newPageNum).then((response: AxiosResponse) => {
+        props.feeScheduleApi.getVariants([],newPageNum).then((response: AxiosResponse) => {
             setServiceVariants(response.data.service_variants);
         })
         .catch((error: any) => {

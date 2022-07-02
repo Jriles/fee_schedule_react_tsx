@@ -1,19 +1,22 @@
 import { Button, Container, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { ServiceResponse, UpdateServiceSchema } from '../components/api/api';
+import { DefaultApi, ServiceResponse, UpdateServiceSchema } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
 import { Link } from "react-router-dom";
 import EditValueOnClick from "../components/EditValueOnClick";
 import ModalComp from "../components/deleteModal";
+import { Cookies } from 'react-cookie';
 
+interface ServicesProps {
+    feeScheduleApi: DefaultApi;
+}
 
-export default function Services() {
+export default function Services(props:ServicesProps) {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
 
     React.useEffect(() => {
-        feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
         })
         .catch((error: any) => {
@@ -23,7 +26,7 @@ export default function Services() {
 
     async function deleteService(serviceId:string) {
         try {
-            await feeScheduleApi.deleteService(serviceId);
+            await props.feeScheduleApi.deleteService(serviceId);
         } catch (error) {
             console.log(error)
         }

@@ -1,11 +1,13 @@
-import { Button, Container, Form, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { CreateServiceSchema, CreateServiceVariantSchema, ServiceAttributeLineResponse, ServiceAttributeValue, ServiceResponse } from '../components/api/api';
+import { Button, Container, Form } from "react-bootstrap";
+import { CreateServiceVariantSchema, DefaultApi, ServiceAttributeLineResponse, ServiceAttributeValue, ServiceResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent, ChangeEventHandler } from "react";
-import { Link } from "react-router-dom";
 
-export default function CreateServiceVariant() {
+interface CreateServiceVariantProps {
+    feeScheduleApi: DefaultApi;
+}
+
+export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     interface SelectedServiceAttrVal {
         //where the val here is the service attr val id
         LineId: string,
@@ -20,7 +22,7 @@ export default function CreateServiceVariant() {
     const [selectedServiceAttrVals, setSelectedServiceAttrVals] = React.useState<SelectedServiceAttrVal[]>([]);
 
     React.useEffect(() => {
-        feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
             setServiceId(response.data.services[0].id)
             getAllServiceLines(response.data.services[0].id)
@@ -38,7 +40,7 @@ export default function CreateServiceVariant() {
             per_page_state_cost: perPageStateCost
         }
 
-        feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
+        props.feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
             setRes(response.statusText);
         })
         .catch((error: any) => {
@@ -48,7 +50,7 @@ export default function CreateServiceVariant() {
 
     // we need to know all the lines for a given service
     function getAllServiceLines (serviceId:string) {
-        feeScheduleApi.getServiceAttributeLines(serviceId).then((response: AxiosResponse) => {
+        props.feeScheduleApi.getServiceAttributeLines(serviceId).then((response: AxiosResponse) => {
             setServiceLines(response.data.service_lines);
             var serviceAttrValsToSelect:SelectedServiceAttrVal[] = [];
             for (var line of response.data.service_lines){

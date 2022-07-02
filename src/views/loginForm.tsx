@@ -1,15 +1,20 @@
 import { Button, Container, Form, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { CreateAttributeSchema, LoginSchema } from '../components/api/api';
+import { CreateAttributeSchema, DefaultApi, LoginSchema } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
-import { useCookies } from "react-cookie";
+import { Cookies } from 'react-cookie';
+import CreateFeeScheduleApiClient from "../components/feeScheduleApi";
 
-export default function LoginForm() {
+interface LoginFormProps {
+    cookies: Cookies;
+    feeScheduleApi: DefaultApi;
+    setFeeScheduleApi(feeScheduleApi:DefaultApi): any;
+}
+
+export default function LoginForm(props:LoginFormProps) {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [rememberMe, setRememberMe] = React.useState(false);
-    const [cookies, setCookie] = useCookies(['sessionToken']);
 
     function login() {
         const loginVals: LoginSchema = {
@@ -17,8 +22,17 @@ export default function LoginForm() {
             password: password,
             remember_me: rememberMe
         }
-        feeScheduleApi.login(loginVals).then((response: AxiosResponse) => {
-            setCookie('sessionToken', response.data.session_token)
+        props.feeScheduleApi.login(loginVals).then((response: AxiosResponse) => {
+            const { cookies } = props;
+            const sessionToken = response.data.session_token;
+            const userId = response.data.user_id;
+            cookies.set('sessionToken', sessionToken)
+            cookies.set('userId', userId)
+            console.log(userId)
+            props.setFeeScheduleApi(CreateFeeScheduleApiClient({
+                sessionToken: sessionToken,
+                userId: userId
+            }))
         })
         .catch((error: any) => {
             console.log(error);

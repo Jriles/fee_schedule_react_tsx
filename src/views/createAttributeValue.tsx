@@ -1,11 +1,14 @@
 import { Button, Container, Form } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { CreateAttributeValueSchema } from '../components/api/api';
+import { CreateAttributeValueSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 
-export default function CreateAttributeValue() {
+interface CreateAttributeValueProps {
+    feeScheduleApi: DefaultApi;
+}
+
+export default function CreateAttributeValue(props:CreateAttributeValueProps) {
     const [res, setRes] = React.useState("");
     const [attributeValueTitle, setAttributeValueTitle] = React.useState("");
     const [attributeTitle, setAttributeTitle] = React.useState("");
@@ -15,7 +18,7 @@ export default function CreateAttributeValue() {
     let { attributeId } = useParams<ServiceAttributeValuesParams>();
 
     React.useEffect(() => {
-        feeScheduleApi.getAttribute(attributeId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAttribute(attributeId ?? "").then((response: AxiosResponse) => {
             setAttributeTitle(response.data.title)
         })
         .catch((error: any) => {
@@ -28,7 +31,7 @@ export default function CreateAttributeValue() {
             title: attributeValueTitle
         }
 
-        feeScheduleApi.createAttributeValue(attributeId ?? "", attrVal).then((response: AxiosResponse) => {
+        props.feeScheduleApi.createAttributeValue(attributeId ?? "", attrVal).then((response: AxiosResponse) => {
             console.log(response);
             setRes(response.statusText);
         })

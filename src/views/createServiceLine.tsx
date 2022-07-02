@@ -1,11 +1,14 @@
 import { Button, Container, Form } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { AttributeResponse, CreateAttributeSchema, CreateAttributeValueSchema } from '../components/api/api';
+import { AttributeResponse, CreateAttributeSchema, CreateAttributeValueSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
 import { useParams } from "react-router-dom";
 
-export default function CreateServiceAttributeLine() {
+interface CreateServiceAttributeLineProps {
+    feeScheduleApi: DefaultApi;
+}
+
+export default function CreateServiceAttributeLine(props:CreateServiceAttributeLineProps) {
     const [res, setRes] = React.useState("");
     const [attributes, setAttributes] = React.useState<AttributeResponse[]>([]);
     const [serviceTitle, setServiceTitle] = React.useState("");
@@ -16,13 +19,13 @@ export default function CreateServiceAttributeLine() {
     let { serviceId } = useParams<ServiceAttributeLineParams>();
 
     React.useEffect(() => {
-        feeScheduleApi.getAllAttributes().then((response: AxiosResponse) => {
+        props.feeScheduleApi.getAllAttributes().then((response: AxiosResponse) => {
             setAttributes(response.data.attributes)
         })
         .catch((error: any) => {
             console.log(error);
         });
-        feeScheduleApi.getService(serviceId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getService(serviceId ?? "").then((response: AxiosResponse) => {
             setServiceTitle(response.data.title)
         })
         .catch((error: any) => {
@@ -31,7 +34,7 @@ export default function CreateServiceAttributeLine() {
     }, [])
 
     function createServiceAttributeLine() {
-        feeScheduleApi.createServiceAttributeLine(serviceId ?? "", selectedAttribute).then((response: AxiosResponse) => {
+        props.feeScheduleApi.createServiceAttributeLine(serviceId ?? "", selectedAttribute).then((response: AxiosResponse) => {
             console.log(response);
             setRes(response.statusText);
         })

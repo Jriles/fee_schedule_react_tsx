@@ -1,11 +1,14 @@
 import { Button, Container, Form, ListGroup } from "react-bootstrap";
-import { feeScheduleApi } from "../components/feeScheduleApi";
-import { AttributeValueResponse, CreateServiceAttributeValueSchema, CreateServiceSchema } from '../components/api/api';
+import { AttributeValueResponse, CreateServiceAttributeValueSchema, CreateServiceSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent, ChangeEventHandler } from "react";
 import { useParams } from "react-router-dom";
 
-export default function CreateServiceAttributeValue() {
+interface CreateServiceAttributeLineProps {
+    feeScheduleApi: DefaultApi;
+}
+
+export default function CreateServiceAttributeValue(props:CreateServiceAttributeLineProps) {
     type ServiceAttributeValueParams = {
         lineId: string;
     }
@@ -16,9 +19,9 @@ export default function CreateServiceAttributeValue() {
     let { lineId } = useParams<ServiceAttributeValueParams>();
 
     React.useEffect(() => {
-        feeScheduleApi.getServiceAttributeLine(lineId ?? "").then((response: AxiosResponse) => {
+        props.feeScheduleApi.getServiceAttributeLine(lineId ?? "").then((response: AxiosResponse) => {
             setAttributeTitle(response.data.attribute_title)
-            feeScheduleApi.getAllAttributeValues(response.data.attribute_id).then((response: AxiosResponse) => {
+            props.feeScheduleApi.getAllAttributeValues(response.data.attribute_id).then((response: AxiosResponse) => {
                 setAttributeValues(response.data.attribute_values);
                 setSelectedAttributeValueId(response.data.attribute_values[0].id)
             })
@@ -36,7 +39,7 @@ export default function CreateServiceAttributeValue() {
             attributeValueId: selectedAttributeValueId
         }
 
-        feeScheduleApi.createServiceAttributeValue(lineId ?? "", serviceAttrVal).then((response: AxiosResponse) => {
+        props.feeScheduleApi.createServiceAttributeValue(lineId ?? "", serviceAttrVal).then((response: AxiosResponse) => {
             console.log(response);
             setRes(response.statusText);
         })
