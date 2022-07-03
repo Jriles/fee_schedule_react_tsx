@@ -4,6 +4,7 @@ import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
 import { Cookies } from 'react-cookie';
 import CreateFeeScheduleApiClient from "../components/feeScheduleApi";
+import { useNavigate } from 'react-router-dom';
 
 interface LoginFormProps {
     cookies: Cookies;
@@ -15,6 +16,7 @@ export default function LoginForm(props:LoginFormProps) {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [rememberMe, setRememberMe] = React.useState(false);
+    const navigate = useNavigate();
 
     function login() {
         const loginVals: LoginSchema = {
@@ -33,6 +35,7 @@ export default function LoginForm(props:LoginFormProps) {
                 sessionToken: sessionToken,
                 userId: userId
             }))
+            navigate('/services');
         })
         .catch((error: any) => {
             console.log(error);
