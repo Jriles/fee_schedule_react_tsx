@@ -23,7 +23,7 @@ export default function UpdateService(props:UpdateServiceProps) {
     const [res, setRes] = React.useState("");
     const [serviceTitle, setServiceTitle] = React.useState("");
     let { serviceId } = useParams<UpdateServiceParams>();
-    function createService() {
+    function updateService() {
         const serviceVals: UpdateServiceSchema = {
             title: serviceTitle
         }
@@ -49,7 +49,7 @@ export default function UpdateService(props:UpdateServiceProps) {
                     <Form.Label>Service Name</Form.Label>
                     <Form.Control onChange={onTitleChange} placeholder={currentServiceTitle} />
                 </Form.Group>
-                <Button onClick={createService}>Submit</Button>
+                <Button onClick={updateService}>Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>

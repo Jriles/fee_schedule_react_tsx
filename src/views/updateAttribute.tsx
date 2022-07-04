@@ -23,7 +23,7 @@ export default function UpdateAttribute(props:UpdateAttributeProps) {
     const [res, setRes] = React.useState("");
     const [attributeTitle, setAttributeTitle] = React.useState("");
     let { attributeId } = useParams<UpdateAttributeParams>();
-    function createService() {
+    function updateAttribute() {
         const attributeVals: UpdateAttributeSchema = {
             title: attributeTitle
         }
@@ -49,7 +49,7 @@ export default function UpdateAttribute(props:UpdateAttributeProps) {
                     <Form.Label>Attribute Name</Form.Label>
                     <Form.Control onChange={onTitleChange} placeholder={currentAttributeTitle} />
                 </Form.Group>
-                <Button onClick={createService}>Submit</Button>
+                <Button onClick={updateAttribute}>Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>

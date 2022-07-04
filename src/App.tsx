@@ -21,6 +21,7 @@ import CreateFeeScheduleApiClient from './components/feeScheduleApi';
 import { DefaultApi } from './components/api';
 import UpdateService from './views/updateService';
 import UpdateAttribute from './views/updateAttribute';
+import UpdateAttributeValue from './views/updateAttributeValue';
 
 interface AppProps {
   cookies: Cookies;
@@ -50,6 +51,7 @@ function App(props:AppProps) {
         <Route path="/service_variants/create" element={<CreateServiceVariant feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/attributes" element={<Attributes feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/attributes/:attributeId" element={<AttributeValues feeScheduleApi={feeScheduleApi}/>}/>
+        <Route path="/attributes/:attributeId/values/:attributeValueId" element={<UpdateAttributeValue feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/attributes/:attributeId/create" element={<CreateAttributeValue feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/attributes/:attributeId/update" element={<UpdateAttribute feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/attributes/create" element={<CreateAttribute feeScheduleApi={feeScheduleApi}/>}/>

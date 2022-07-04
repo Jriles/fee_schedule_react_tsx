@@ -48,7 +48,7 @@ export default function AttributeValues(props:AttributeValuesProps) {
         listItems = attrVals.map(function(attrVal, i) {
                 return (
                     <ListGroup.Item className="d-inline">
-                        {attrVal.title}
+                        <Link to={'values/' + attrVal.id} state={{ currentAttributeValueTitle: attrVal.title }}>{attrVal.title}</Link>
                         <ModalComp
                             message={DELETE_SERVICE_LINE_MODAL_BODY + attrVal.title + "?"}
                             header={DELETE_SERVICE_MODAL_HEADER}
@@ -79,7 +79,7 @@ export default function AttributeValues(props:AttributeValuesProps) {
                                 </Dropdown.Item>
                             </Link>
                             <Link to="create" style={{ textDecoration: 'none' }} >
-                                <Dropdown.Item href="#/create">Create Service Attribute Value</Dropdown.Item>
+                                <Dropdown.Item href="#/create">Create Attribute Value</Dropdown.Item>
                             </Link>
                         </Dropdown.Menu>
                     </Dropdown>
