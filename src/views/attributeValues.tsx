@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup } from "react-bootstrap";
+import { Button, Container, Dropdown, ListGroup } from "react-bootstrap";
 import { AttributeValueResponse, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
@@ -62,10 +62,29 @@ export default function AttributeValues(props:AttributeValuesProps) {
     }
     return (
         <Container className="mt-5">
-            <h1 className="mb-4">{attributeTitle}</h1>
-            <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
-                <Button className="mb-5">Create Service Attribute Value</Button>
-            </Link>
+            <div className="row mb-5">
+                <div className="col">
+                    <h1 className="mb-4">{attributeTitle}</h1>
+                </div>
+                <div className="col">
+                    <Dropdown className="float-end">
+                        <Dropdown.Toggle id="dropdown-basic">
+                            Update Attribute
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Link to="update" style={{ textDecoration: 'none' }} state={{ currentAttributeTitle: attributeTitle }}>
+                                <Dropdown.Item href="#/update">
+                                    Update Attribute Name
+                                </Dropdown.Item>
+                            </Link>
+                            <Link to="create" style={{ textDecoration: 'none' }} >
+                                <Dropdown.Item href="#/create">Create Service Attribute Value</Dropdown.Item>
+                            </Link>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+            </div>
             <ListGroup>
                 {listItems}
             </ListGroup>

@@ -4,11 +4,11 @@ import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
 import { useLocation, useParams } from "react-router-dom";
 
-interface CreateServiceProps {
+interface UpdateServiceProps {
     feeScheduleApi: DefaultApi;
 }
 
-export default function UpdateService(props:CreateServiceProps) {
+export default function UpdateService(props:UpdateServiceProps) {
     type UpdateServiceParams = {
         serviceId: string;
     }
@@ -45,7 +45,7 @@ export default function UpdateService(props:CreateServiceProps) {
         <Container className="mt-5 w-50">
             <h1 className="mb-5">Update Service</h1>
             <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
+                <Form.Group className="mb-3">
                     <Form.Label>Service Name</Form.Label>
                     <Form.Control onChange={onTitleChange} placeholder={currentServiceTitle} />
                 </Form.Group>
