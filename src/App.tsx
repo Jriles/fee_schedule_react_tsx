@@ -19,6 +19,7 @@ import ServiceVariants from './views/serviceVariants';
 import { Cookies, withCookies } from 'react-cookie';
 import CreateFeeScheduleApiClient from './components/feeScheduleApi';
 import { DefaultApi } from './components/api';
+import UpdateService from './views/updateService';
 
 interface AppProps {
   cookies: Cookies;
@@ -40,6 +41,7 @@ function App(props:AppProps) {
         <Route path="/services" element={<Services feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/services/create" element={<CreateService feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/services/:serviceId" element={<ServiceLines feeScheduleApi={feeScheduleApi}/>}/>
+        <Route path="/services/:serviceId/update" element={<UpdateService feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/services/:serviceId/create" element={<CreateServiceAttributeLine feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/services/:serviceId/lines/:lineId" element={<ServiceAttributeValues feeScheduleApi={feeScheduleApi}/>}/>
         <Route path="/services/:serviceId/lines/:lineId/create" element={<CreateServiceAttributeValue feeScheduleApi={feeScheduleApi}/>}/>

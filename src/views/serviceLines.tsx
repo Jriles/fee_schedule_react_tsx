@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup } from "react-bootstrap";
+import { Button, Container, Dropdown, ListGroup } from "react-bootstrap";
 import { DefaultApi, ServiceAttributeLineResponse, ServiceResponse, UpdateServiceSchema } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
@@ -63,13 +63,34 @@ export default function ServiceLines(props:ServiceLinesProps) {
     }
     return (
         <Container className="mt-5">
-            <h1 className="mb-4">{serviceTitle}</h1>
-            <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
-                <Button className="mb-5">Create Service Line</Button>
-            </Link>
-            <ListGroup>
-                {listItems}
-            </ListGroup>
+            <div className="row mb-5">
+                <div className="col">
+                    <h1 className="">{serviceTitle}</h1>
+                </div>
+                <div className="col">
+                    <Dropdown className="float-end">
+                        <Dropdown.Toggle id="dropdown-basic">
+                            Update Service
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Link to="update" style={{ textDecoration: 'none' }} state={{ currentServiceTitle: serviceTitle }}>
+                                <Dropdown.Item href="#/update">
+                                    Update Service Name
+                                </Dropdown.Item>
+                            </Link>
+                            <Link to="create" style={{ textDecoration: 'none' }} >
+                                <Dropdown.Item href="#/create">Create Service Line</Dropdown.Item>
+                            </Link>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </div>
+            </div>
+            <div>
+                <ListGroup>
+                    {listItems}
+                </ListGroup>
+            </div>
         </Container>
     )
 }
