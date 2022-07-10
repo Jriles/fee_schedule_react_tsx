@@ -41,10 +41,10 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                         {serviceVariant.service_name}
                     </td>
                     <td>
-                        ${serviceVariant.state_cost}
+                        ${serviceVariant.state_cost / 100}
                     </td>
                     <td>
-                        ${serviceVariant.per_page_state_cost}
+                        ${serviceVariant.per_page_state_cost ? serviceVariant.per_page_state_cost / 100 : 0}
                     </td>
                     <td>
                         {serviceVariant.service_attribute_vals?.join(', ')}

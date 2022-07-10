@@ -35,9 +35,9 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     function createServiceVariant() {
         const serviceVariantVals: CreateServiceVariantSchema = {
             service_id: serviceId,
-            state_cost: fee,
+            state_cost: fee * 100,
             service_attribute_value_ids: selectedServiceAttrVals.map(val => val.ServiceAttrValId),
-            per_page_state_cost: perPageStateCost
+            per_page_state_cost: perPageStateCost * 100
         }
 
         props.feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
@@ -156,11 +156,11 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>State Cost</Form.Label>
-                    <Form.Control type="number" onChange={onFeeChange} placeholder="100.00" />
+                    <Form.Control type="number" step=".01" onChange={onFeeChange} placeholder="100.00" />
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Per Page State Cost (Optional)</Form.Label>
-                    <Form.Control type="number" onChange={onPerPageStateCostChange} placeholder="100.00" />
+                    <Form.Control type="number" step=".01" onChange={onPerPageStateCostChange} placeholder="100.00" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     {renderServiceAttrLines()}
