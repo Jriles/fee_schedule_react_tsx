@@ -2,6 +2,7 @@ import { Button, Container, Form } from "react-bootstrap";
 import { CreateServiceVariantSchema, DefaultApi, ServiceAttributeLineResponse, ServiceAttributeValue, ServiceResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent, ChangeEventHandler } from "react";
+import { countryAlpha2, currencyCodes } from "../const/isoCodes";
 
 interface CreateServiceVariantProps {
     feeScheduleApi: DefaultApi;
@@ -13,6 +14,7 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         LineId: string,
         ServiceAttrValId: string
     }
+
     const [res, setRes] = React.useState("");
     const [serviceId, setServiceId] = React.useState("");
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
@@ -20,6 +22,8 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     const [fee, setFee] = React.useState(0.0);
     const [perPageStateCost, setPerPageStateCost] = React.useState(0.0);
     const [selectedServiceAttrVals, setSelectedServiceAttrVals] = React.useState<SelectedServiceAttrVal[]>([]);
+    const [countryCode, setCountryCode] = React.useState(countryAlpha2[0]);
+    const [currencyCode, setCurrencyCode] = React.useState(currencyCodes[0]);
 
     React.useEffect(() => {
         props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
@@ -37,7 +41,9 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
             service_id: serviceId,
             state_cost: fee * 100,
             service_attribute_value_ids: selectedServiceAttrVals.map(val => val.ServiceAttrValId),
-            per_page_state_cost: perPageStateCost * 100
+            per_page_state_cost: perPageStateCost * 100,
+            iso_country_code: countryCode,
+            iso_currency_code: currencyCode
         }
 
         props.feeScheduleApi.createVariant(serviceVariantVals).then((response: AxiosResponse) => {
@@ -135,6 +141,14 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         getAllServiceLines(serviceId)
     }
 
+    function onCurrencyCodeChange(e: ChangeEvent<HTMLSelectElement>) {
+        setCurrencyCode(e.target.value)
+    }
+
+    function onCountryCodeChange(e: ChangeEvent<HTMLSelectElement>) {
+        setCountryCode(e.target.value)
+    }
+
     var serviceOptions:any = [];
     if (services) {
         serviceOptions = services.map(function(service, i) {
@@ -145,12 +159,25 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         )
     }
 
+    const countryOptions:any = countryAlpha2.map(function(countryAlpha2Code, i) {
+        return (
+            <option value={countryAlpha2Code}>{countryAlpha2Code}</option>
+        )
+    });
+
+    const currencyOptions:any = currencyCodes.map(function(currencyCode, i) {
+        return (
+            <option value={currencyCode}>{currencyCode}</option>
+        )
+    });
+    
+
     return (
         <Container className="mt-5 w-50">
             <Form>
                 <Form.Group className="mb-3">
                     <Form.Label>Service</Form.Label>
-                    <Form.Select aria-label="Default select example" onChange={onServiceIdChange}>
+                    <Form.Select onChange={onServiceIdChange}>
                         {serviceOptions}
                     </Form.Select>
                 </Form.Group>
@@ -164,6 +191,18 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                 </Form.Group>
                 <Form.Group className="mb-3">
                     {renderServiceAttrLines()}
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Currency</Form.Label>
+                    <Form.Select onChange={onCurrencyCodeChange}>
+                        {currencyOptions}
+                    </Form.Select>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Country</Form.Label>
+                    <Form.Select onChange={onCountryCodeChange}>
+                        {countryOptions}
+                    </Form.Select>
                 </Form.Group>
                 <Button onClick={createServiceVariant}>Submit</Button>
                 <p>{res}</p>

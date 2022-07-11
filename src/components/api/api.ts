@@ -130,13 +130,13 @@ export interface CreateServiceVariantSchema {
      */
     'service_id': string;
     /**
-     * 
+     * The base state cost (in lowest possible denomination for the parent country\'s currency)
      * @type {number}
      * @memberof CreateServiceVariantSchema
      */
     'state_cost': number;
     /**
-     * 
+     * The per page state cost (in lowest possible denomination for the parent country\'s currency)
      * @type {number}
      * @memberof CreateServiceVariantSchema
      */
@@ -147,6 +147,18 @@ export interface CreateServiceVariantSchema {
      * @memberof CreateServiceVariantSchema
      */
     'service_attribute_value_ids': Array<string>;
+    /**
+     * The three letter iso code for the currency of the country for which this service variant applies to.
+     * @type {string}
+     * @memberof CreateServiceVariantSchema
+     */
+    'iso_currency_code': string;
+    /**
+     * The two letter iso (alphabet, not numeric) code representing the country for which this service variant applies to.
+     * @type {string}
+     * @memberof CreateServiceVariantSchema
+     */
+    'iso_country_code': string;
 }
 /**
  * 
@@ -355,6 +367,18 @@ export interface VariantResponse {
      * @memberof VariantResponse
      */
     'per_page_state_cost'?: number;
+    /**
+     * The three letter iso code for the currency of the country for which this service variant applies to.
+     * @type {string}
+     * @memberof VariantResponse
+     */
+    'iso_currency_code': string;
+    /**
+     * The two letter iso (alphabet, not numeric) code representing the country for which this service variant applies to.
+     * @type {string}
+     * @memberof VariantResponse
+     */
+    'iso_country_code': string;
 }
 
 /**
