@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DefaultApi, ServiceAttributeLineResponse, ServiceAttributeValue, ServiceResponse, UpdateServiceSchema } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
@@ -57,10 +57,17 @@ export default function ServiceAttributeValues(props:ServiceAttributeValuesProps
     }
     return (
         <Container className="mt-5">
-            <h1 className="mb-4">{attributeTitle}</h1>
-            <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
-                <Button className="mb-5">Create Service Attribute Value</Button>
-            </Link>
+            <Row className="mb-5">
+                <Col>
+                    <h1 className="mb-4">{attributeTitle}</h1>
+                </Col>
+                <Col>
+                    <Link to="create" className="text-white float-end" style={{ textDecoration: 'none' }} >
+                        <Button className="mb-5">Create Service Attribute Value</Button>
+                    </Link>
+                </Col>
+            </Row>
+            
             <ListGroup>
                 {listItems}
             </ListGroup>

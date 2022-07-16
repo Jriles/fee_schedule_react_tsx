@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup, Pagination, Table } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Pagination, Row, Table } from "react-bootstrap";
 import { DefaultApi, ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
@@ -14,6 +14,8 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
     const DELETE_SERVICE_MODAL_HEADER = "Delete Service?";
     const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
     const [pageNum, setPageNum] = React.useState(1);
+    const [serviceFilter, setServiceFilter] = React.useState();
+    const [attributeValsFilter, setAttributeValsFilter] = React.useState();
 
     React.useEffect(() => {
         props.feeScheduleApi.getVariants([],pageNum).then((response: AxiosResponse) => {
@@ -83,10 +85,17 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
 
     return (
         <Container className="mt-5">
-            <h1 className="mb-4">Service Variants</h1>
-            <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
-                <Button className="mb-5">Create Service Variant</Button>
-            </Link>
+            <Row className="mb-5">
+                <Col>
+                    <h1 className="mb-4">Service Variants</h1>
+                </Col>
+                <Col>
+                    <Link to="create" className="text-white float-end" style={{ textDecoration: 'none' }} >
+                        <Button className="mb-5">Create Service Variant</Button>
+                    </Link>
+                </Col>
+            </Row>
+
             <Table>
                 <thead>
                     <tr>

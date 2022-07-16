@@ -1,4 +1,4 @@
-import { Button, Container, ListGroup } from "react-bootstrap";
+import { Button, Col, Container, ListGroup, Row } from "react-bootstrap";
 import { DefaultApi, ServiceResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React from "react";
@@ -51,10 +51,17 @@ export default function Attributes(props:AttributesProps) {
 
     return (
         <Container className="mt-5">
-            <h1 className="mb-4">Attributes</h1>
-            <Link to="create" className="text-white" style={{ textDecoration: 'none' }} >
-                <Button className="mb-5">Create Attribute</Button>
-            </Link>
+            <Row className="mb-5">
+                <Col>
+                    <h1 className="mb-4">Attributes</h1>
+                </Col>
+                <Col>
+                    <Link to="create" className="text-white float-end" style={{ textDecoration: 'none' }} >
+                        <Button className="mb-5">Create Attribute</Button>
+                    </Link>
+                </Col>
+            </Row>
+
             <ListGroup>
                 {listItems}
             </ListGroup>

@@ -49,7 +49,7 @@ export default function ServiceLines(props:ServiceLinesProps) {
         listItems = serviceLines.map(function(line, i) {
                 return (
                     <ListGroup.Item>
-                        <Link to={"lines/" + line.id} className="text-black" style={{ textDecoration: 'none' }}>{line.attribute_title}</Link>
+                        <Link to={"lines/" + line.id}>{line.attribute_title}</Link>
                         <ModalComp
                             message={DELETE_SERVICE_LINE_MODAL_BODY + line.attribute_title + "?"}
                             header={DELETE_SERVICE_MODAL_HEADER}
