@@ -7,6 +7,7 @@ import ModalComp from "../components/deleteModal";
 
 interface ServiceAttributeValuesProps {
     feeScheduleApi: DefaultApi;
+    setCurrentServiceAttrName(currentServiceAttrName:string): any;
 }
 
 export default function ServiceAttributeValues(props:ServiceAttributeValuesProps) {
@@ -24,6 +25,7 @@ export default function ServiceAttributeValues(props:ServiceAttributeValuesProps
         props.feeScheduleApi.getServiceAttributeLine(lineId ?? "").then((response: AxiosResponse) => {
             setServiceAttrVals(response.data.service_attribute_values);
             setAttributeTitle(response.data.attribute_title)
+            props.setCurrentServiceAttrName(response.data.attribute_title)
         })
         .catch((error: any) => {
             console.log(error);

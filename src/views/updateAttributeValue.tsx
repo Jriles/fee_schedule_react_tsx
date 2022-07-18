@@ -6,6 +6,7 @@ import { useLocation, useParams } from "react-router-dom";
 
 interface UpdateAttributeValueProps {
     feeScheduleApi: DefaultApi;
+    setCurrentAttrValName(currentAttributeValueName:string): any;
 }
 
 export default function UpdateAttributeValue(props:UpdateAttributeValueProps) {
@@ -22,6 +23,10 @@ export default function UpdateAttributeValue(props:UpdateAttributeValueProps) {
     const [res, setRes] = React.useState("");
     const [attributeTitle, setAttributeTitle] = React.useState("");
     let { attributeValueId } = useParams<UpdateAttributeValueParams>();
+
+
+    props.setCurrentAttrValName(currentAttributeValueTitle);
+
     function updateAttributeValue() {
         const attributeVals: UpdateAttributeValueSchema = {
             title: attributeTitle

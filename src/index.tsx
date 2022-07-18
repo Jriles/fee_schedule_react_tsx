@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { CookiesProvider } from 'react-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import App from './App';
+import { BrowserRouter } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -10,6 +11,8 @@ const root = ReactDOM.createRoot(
 
 root.render(
     <CookiesProvider>
-      <App/>
+      <BrowserRouter>
+        <App/>
+      </BrowserRouter>
     </CookiesProvider>
 );

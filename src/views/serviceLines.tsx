@@ -7,6 +7,7 @@ import ModalComp from "../components/deleteModal";
 
 interface ServiceLinesProps {
     feeScheduleApi: DefaultApi;
+    setCurrentServiceName(currentServiceName:string): any;
 }
 
 export default function ServiceLines(props:ServiceLinesProps) {
@@ -22,7 +23,9 @@ export default function ServiceLines(props:ServiceLinesProps) {
 
     React.useEffect(() => {
         props.feeScheduleApi.getService(serviceId ?? "").then((response: AxiosResponse) => {
-            setServiceTitle(response.data.title);
+            const serviceName = response.data.title
+            setServiceTitle(serviceName);
+            props.setCurrentServiceName(serviceName);
         })
         .catch((error: any) => {
             console.log(error);
