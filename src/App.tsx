@@ -23,7 +23,7 @@ import UpdateService from './views/updateService';
 import UpdateAttribute from './views/updateAttribute';
 import UpdateAttributeValue from './views/updateAttributeValue';
 import useBreadcrumbs, {Route, createRoutesFromChildren} from 'use-react-router-breadcrumbs';
-import { Breadcrumb } from 'react-bootstrap';
+import { Breadcrumb, Container } from 'react-bootstrap';
 
 interface AppProps {
   cookies: Cookies;
@@ -102,17 +102,19 @@ function App(props:AppProps) {
   return (
     <>
       <NavBarComponent/>
-      <Breadcrumb>
-        {breadCrumbs.map(({
-            match,
-            breadcrumb
-          }) => (
-            <Breadcrumb.Item key={match.pathname}>
-              <Link to={match.pathname}>
-                {breadcrumb}</Link>
-            </Breadcrumb.Item>
-        ))}
-      </Breadcrumb>
+      <Container className="mt-3">
+        <Breadcrumb >
+          {breadCrumbs.map(({
+              match,
+              breadcrumb
+            }) => (
+              <Breadcrumb.Item key={match.pathname}>
+                <Link to={match.pathname}>
+                  {breadcrumb}</Link>
+              </Breadcrumb.Item>
+          ))}
+        </Breadcrumb>
+      </Container>
       {GeneratedRoutes}
   </>
   );
