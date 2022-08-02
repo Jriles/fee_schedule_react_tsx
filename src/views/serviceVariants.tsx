@@ -99,9 +99,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                         ${serviceVariant.state_cost / 100}
                     </td>
                     <td>
-                        ${serviceVariant.per_page_state_cost ? serviceVariant.per_page_state_cost / 100 : 0}
-                    </td>
-                    <td>
                         {serviceVariant.service_attribute_vals?.join(', ')}
                     </td>
                     <td>
@@ -153,9 +150,9 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
             const selectedFilter:Filter = selectedFilters[filterId];
             return (
                 <Col sm={2}>
-                    <div>
-                        <p>{selectedFilter.name}</p>
-                        <CloseButton onClick={() => handleRemoveFilter(filterId)}/>
+                    <div className="mb-2">
+                        {selectedFilter.name}
+                        <CloseButton className="float-end" onClick={() => handleRemoveFilter(filterId)}/>
                     </div>
                     
                     <Form.Select className="">
@@ -228,7 +225,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                     <tr>
                         <th>Service</th>
                         <th>State Cost</th>
-                        <th>Per Page State Cost</th>
                         <th>Variant Values</th>
                     </tr>
                 </thead>
