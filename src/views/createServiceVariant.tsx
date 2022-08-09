@@ -20,7 +20,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     const [services, setServices] = React.useState<ServiceResponse[]>([]);
     const [serviceLines, setServiceLines] = React.useState<ServiceAttributeLineResponse[]>([]);
     const [fee, setFee] = React.useState(0.0);
-    const [perPageStateCost, setPerPageStateCost] = React.useState(0.0);
     const [selectedServiceAttrVals, setSelectedServiceAttrVals] = React.useState<SelectedServiceAttrVal[]>([]);
     const [countryCode, setCountryCode] = React.useState(countryAlpha2[0]);
     const [currencyCode, setCurrencyCode] = React.useState(currencyCodes[0]);
@@ -41,7 +40,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
             service_id: serviceId,
             state_cost: fee * 100,
             service_attribute_value_ids: selectedServiceAttrVals.map(val => val.ServiceAttrValId),
-            per_page_state_cost: perPageStateCost * 100,
             iso_country_code: countryCode,
             iso_currency_code: currencyCode
         }
@@ -131,10 +129,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         setFee(parseFloat(e.target.value))
     }
 
-    function onPerPageStateCostChange(e: ChangeEvent<HTMLInputElement>) {
-        setPerPageStateCost(parseFloat(e.target.value))
-    }
-
     function onServiceIdChange(e: ChangeEvent<HTMLSelectElement>) {
         const serviceId:string = e.target.value;
         setServiceId(serviceId)
@@ -184,10 +178,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>State Cost</Form.Label>
                     <Form.Control type="number" step=".01" onChange={onFeeChange} placeholder="100.00" />
-                </Form.Group>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Per Page State Cost (Optional)</Form.Label>
-                    <Form.Control type="number" step=".01" onChange={onPerPageStateCostChange} placeholder="100.00" />
                 </Form.Group>
                 <Form.Group className="mb-3">
                     {renderServiceAttrLines()}

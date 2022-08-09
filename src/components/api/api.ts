@@ -136,12 +136,6 @@ export interface CreateServiceVariantSchema {
      */
     'state_cost': number;
     /**
-     * The per page state cost (in lowest possible denomination for the parent country\'s currency)
-     * @type {number}
-     * @memberof CreateServiceVariantSchema
-     */
-    'per_page_state_cost'?: number;
-    /**
      * 
      * @type {Array<string>}
      * @memberof CreateServiceVariantSchema
@@ -1149,13 +1143,13 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
         /**
          * 
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
-         * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {Array<string>} [attributeValueIds] This param is an array of strings where the strings are the attribute value ids.
          * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
-         * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
+         * @param {string} [serviceId] service being filtered.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariants: async (serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getVariants: async (attributeValueIds?: Array<string>, pageNumber?: number, serviceId?: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/service_variants/`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1170,16 +1164,16 @@ export const DefaultApiAxiosParamCreator = function (configuration?: Configurati
 
             // authentication sessionCookieAuth required
 
-            if (serviceAttributeValueIds) {
-                localVarQueryParameter['serviceAttributeValueIds[]'] = serviceAttributeValueIds;
+            if (attributeValueIds) {
+                localVarQueryParameter['attributeValueIds[]'] = attributeValueIds;
             }
 
             if (pageNumber !== undefined) {
                 localVarQueryParameter['page_number'] = pageNumber;
             }
 
-            if (filingPageCount !== undefined) {
-                localVarQueryParameter['filing_page_count'] = filingPageCount;
+            if (serviceId !== undefined) {
+                localVarQueryParameter['serviceId'] = serviceId;
             }
 
 
@@ -1586,14 +1580,14 @@ export const DefaultApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
-         * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {Array<string>} [attributeValueIds] This param is an array of strings where the strings are the attribute value ids.
          * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
-         * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
+         * @param {string} [serviceId] service being filtered.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(serviceAttributeValueIds, pageNumber, filingPageCount, options);
+        async getVariants(attributeValueIds?: Array<string>, pageNumber?: number, serviceId?: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<VariantResponse>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getVariants(attributeValueIds, pageNumber, serviceId, options);
             return createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration);
         },
         /**
@@ -1853,14 +1847,14 @@ export const DefaultApiFactory = function (configuration?: Configuration, basePa
         /**
          * 
          * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
-         * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+         * @param {Array<string>} [attributeValueIds] This param is an array of strings where the strings are the attribute value ids.
          * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
-         * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
+         * @param {string} [serviceId] service being filtered.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options?: any): AxiosPromise<VariantResponse> {
-            return localVarFp.getVariants(serviceAttributeValueIds, pageNumber, filingPageCount, options).then((request) => request(axios, basePath));
+        getVariants(attributeValueIds?: Array<string>, pageNumber?: number, serviceId?: string, options?: any): AxiosPromise<VariantResponse> {
+            return localVarFp.getVariants(attributeValueIds, pageNumber, serviceId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -2157,15 +2151,15 @@ export class DefaultApi extends BaseAPI {
     /**
      * 
      * @summary Retrieve the variant (fee and other information) for a particular service variant, ie. (Amended and Restated Articles in Delaware, 1 Day). If you provide no values for the serviceAttribute Values then you will recieve a list of all service variants.
-     * @param {Array<string>} [serviceAttributeValueIds] This param is an array of strings where the strings are the service attribute value ids.
+     * @param {Array<string>} [attributeValueIds] This param is an array of strings where the strings are the attribute value ids.
      * @param {number} [pageNumber] Page number of the total variant count available. The number of variants per page currently is 50. Omitting this value is the same as asking for the first page of variants.
-     * @param {number} [filingPageCount] This param represents the number of pages present in the current filing order. Some filings include a per page fee at the state level.
+     * @param {string} [serviceId] service being filtered.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof DefaultApi
      */
-    public getVariants(serviceAttributeValueIds?: Array<string>, pageNumber?: number, filingPageCount?: number, options?: AxiosRequestConfig) {
-        return DefaultApiFp(this.configuration).getVariants(serviceAttributeValueIds, pageNumber, filingPageCount, options).then((request) => request(this.axios, this.basePath));
+    public getVariants(attributeValueIds?: Array<string>, pageNumber?: number, serviceId?: string, options?: AxiosRequestConfig) {
+        return DefaultApiFp(this.configuration).getVariants(attributeValueIds, pageNumber, serviceId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

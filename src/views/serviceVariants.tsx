@@ -1,7 +1,7 @@
 import { Button, CloseButton, Col, Container, Dropdown, Form, ListGroup, Pagination, Row, Table } from "react-bootstrap";
 import { AttributeResponse, DefaultApi, ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { Link } from "react-router-dom";
 import EditValueOnClick from "../components/EditValueOnClick";
 import ModalComp from "../components/deleteModal";
@@ -14,6 +14,8 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
     const DELETE_SERVICE_MODAL_HEADER = 'Delete Service?';
     const SERVICE_FILTER_NAME = 'Service';
     const SERVICE_FILTER_ID = 'serviceFilter';
+    const SERVICE_FILTER_TYPE = 'service';
+    const ATTRIBUTE_VALUE_FILTER_TYPE = 'attribute_value';
     const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
     const [pageNum, setPageNum] = React.useState(1);
 
@@ -25,6 +27,8 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
     interface Filter {
         name: string;
         options: FilterOption[]
+        selectedOption?: string
+        filterType: string
     }
 
     interface FilterDict {
@@ -35,7 +39,23 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
     const [selectedFilters, setSelectedFilters] = React.useState<FilterDict>({});
 
     React.useEffect(() => {
-        props.feeScheduleApi.getVariants([],pageNum).then((response: AxiosResponse) => {
+        console.log('called useeffect')
+        let attributeValueIds:any[] = Object.keys(selectedFilters).map(function(filterId, i) {
+            const selectedFilter:Filter = selectedFilters[filterId];
+            if (selectedFilter.filterType == ATTRIBUTE_VALUE_FILTER_TYPE) {
+                return selectedFilter.selectedOption
+            }
+        })
+        attributeValueIds = attributeValueIds.filter(x => x !== undefined);
+
+        const selectedServiceFilter:any = selectedFilters[SERVICE_FILTER_ID];
+        let serviceId:string = '';
+        if (selectedServiceFilter) {
+            serviceId = selectedServiceFilter.selectedOption
+        }
+        console.log(attributeValueIds)
+        props.feeScheduleApi.getVariants(attributeValueIds,pageNum,serviceId).then((response: AxiosResponse) => {
+            console.log(response.data.service_variants)
             setServiceVariants(response.data.service_variants);
         })
         .catch((error: any) => {
@@ -45,9 +65,13 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
         const fetchFilterData = async () => {
             let filtersToLoad : FilterDict = {};
             const serviceRes:any = await props.feeScheduleApi.getAllServices()
+            const serviceFilterOptions:FilterOption[] = convertResourcesToFilterOptions(serviceRes.data.services)
+            const firstServiceFilterOptionId:any = serviceFilterOptions.length > 0 ? serviceFilterOptions[0].id : null
             const serviceFilter : Filter = {
                 name: SERVICE_FILTER_NAME,
-                options: convertResourcesToFilterOptions(serviceRes.data.services)
+                options: serviceFilterOptions,
+                selectedOption: firstServiceFilterOptionId,
+                filterType: SERVICE_FILTER_TYPE
             }
             filtersToLoad[SERVICE_FILTER_ID] = serviceFilter;
 
@@ -56,9 +80,13 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
             for (const attribute of attributes) {
                 const attributeValuesRes:any = await props.feeScheduleApi.getAllAttributeValues(attribute.id);
                 const attributeValues : any[] = attributeValuesRes.data.attribute_values
+                const attributeFilterOptions = convertResourcesToFilterOptions(attributeValues);
+                const firstAttributeFilterOptionId = attributeFilterOptions.length > 0 ? attributeFilterOptions[0].id : null
                 const attributeFilter : Filter = {
                     name: attribute.title,
-                    options: convertResourcesToFilterOptions(attributeValues)
+                    options: attributeFilterOptions,
+                    selectedOption: firstAttributeFilterOptionId,
+                    filterType: ATTRIBUTE_VALUE_FILTER_TYPE
                 }
                 filtersToLoad[attribute.id] = attributeFilter
             }
@@ -67,7 +95,7 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
 
         fetchFilterData()
             .catch(console.error);
-    }, []) 
+    }, [selectedFilters]) 
 
     function convertResourcesToFilterOptions (resources:any) {
         return resources.map(function(resource:any, i:number) {
@@ -129,7 +157,7 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
             const filter = filters[filterId];
             return (
                 <>
-                    <Dropdown.Item onClick={() => handleAddFilter(filterId)}>{filter.name}</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSelectFilter(filterId)}>{filter.name}</Dropdown.Item>
                 </>
             )
         })
@@ -152,10 +180,12 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                 <Col sm={2}>
                     <div className="mb-2">
                         {selectedFilter.name}
-                        <CloseButton className="float-end" onClick={() => handleRemoveFilter(filterId)}/>
+                        <CloseButton className="float-end" onClick={() => handleDeSelectFilter(filterId)}/>
                     </div>
                     
-                    <Form.Select className="">
+                    <Form.Select className="" onChange={
+                        (event: ChangeEvent<HTMLSelectElement>) => handleFilterChange(event, filterId)
+                    }>
                         {RenderFilterOptions(selectedFilter.options)}
                     </Form.Select>
                 </Col>
@@ -163,14 +193,22 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
         })
     }
 
-    function handleAddFilter(filterId:string) {
+    function handleFilterChange(event: ChangeEvent<HTMLSelectElement>, filterId:string) {
         let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
-        newSelectedFilters[filterId] = filters[filterId]
-        console.log(newSelectedFilters)
+        let filterToUpdate = filters[filterId];
+        filterToUpdate.selectedOption = event.target.value
+        newSelectedFilters[filterId] = filterToUpdate
         setSelectedFilters(newSelectedFilters);
     }
 
-    function handleRemoveFilter(filterId:string) {
+    function handleSelectFilter(filterId:string) {
+        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
+        let newFilter = filters[filterId];
+        newSelectedFilters[filterId] = newFilter
+        setSelectedFilters(newSelectedFilters);
+    }
+
+    function handleDeSelectFilter(filterId:string) {
         let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
         delete newSelectedFilters[filterId];
         setSelectedFilters(newSelectedFilters);
