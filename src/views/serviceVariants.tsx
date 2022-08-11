@@ -1,4 +1,4 @@
-import { Button, CloseButton, Col, Container, Dropdown, Form, ListGroup, Pagination, Row, Table } from "react-bootstrap";
+import { Button, ButtonGroup, CloseButton, Col, Container, Dropdown, Form, ListGroup, Pagination, Row, Table } from "react-bootstrap";
 import { AttributeResponse, DefaultApi, ServiceResponse, UpdateServiceSchema, VariantResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent } from "react";
@@ -39,7 +39,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
     const [selectedFilters, setSelectedFilters] = React.useState<FilterDict>({});
 
     React.useEffect(() => {
-        console.log('called useeffect')
         let attributeValueIds:any[] = Object.keys(selectedFilters).map(function(filterId, i) {
             const selectedFilter:Filter = selectedFilters[filterId];
             if (selectedFilter.filterType == ATTRIBUTE_VALUE_FILTER_TYPE) {
@@ -53,7 +52,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
         if (selectedServiceFilter) {
             serviceId = selectedServiceFilter.selectedOption
         }
-        console.log(attributeValueIds)
         props.feeScheduleApi.getVariants(attributeValueIds,pageNum,serviceId).then((response: AxiosResponse) => {
             console.log(response.data.service_variants)
             setServiceVariants(response.data.service_variants);
@@ -95,61 +93,34 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
 
         fetchFilterData()
             .catch(console.error);
-    }, [selectedFilters]) 
+    }, [selectedFilters, pageNum]) 
 
-    function convertResourcesToFilterOptions (resources:any) {
-        return resources.map(function(resource:any, i:number) {
-            const filterOption : FilterOption = {
-                name: resource.title,
-                id: resource.id,
-            }
-            return filterOption
-        })
-    }
-
-    async function deleteServiceVariant(variantId:string) {
-        try {
-            await props.feeScheduleApi.deleteVariant(variantId);
-        } catch (error) {
-            console.log(error)
+    const RenderServiceVariants = () => {
+        if (serviceVariants) {
+            return serviceVariants.map(function(serviceVariant, i) {
+                return (
+                    <tr>
+                        <td>
+                            {serviceVariant.service_name}
+                        </td>
+                        <td>
+                            ${serviceVariant.state_cost / 100}
+                        </td>
+                        <td>
+                            {serviceVariant.service_attribute_vals?.join(', ')}
+                        </td>
+                        <td>
+                            <ModalComp
+                                message={"Are you sure you want to delete variant?"}
+                                header={DELETE_SERVICE_MODAL_HEADER}
+                                callback={deleteServiceVariant}
+                                resourceId={serviceVariant.id}
+                            />
+                        </td>
+                    </tr>
+                )
+            })
         }
-    }
-
-    var tableItems:any = [];
-    if (serviceVariants) {
-        tableItems = serviceVariants.map(function(serviceVariant, i) {
-            return (
-                <tr>
-                    <td>
-                        {serviceVariant.service_name}
-                    </td>
-                    <td>
-                        ${serviceVariant.state_cost / 100}
-                    </td>
-                    <td>
-                        {serviceVariant.service_attribute_vals?.join(', ')}
-                    </td>
-                    <td>
-                        <ModalComp
-                            message={"Are you sure you want to delete variant?"}
-                            header={DELETE_SERVICE_MODAL_HEADER}
-                            callback={deleteServiceVariant}
-                            resourceId={serviceVariant.id}
-                        />
-                    </td>
-                </tr>
-            )
-        })
-    }
-
-    function onPageChange(newPageNum:number) {
-        setPageNum(newPageNum)
-        props.feeScheduleApi.getVariants([],newPageNum).then((response: AxiosResponse) => {
-            setServiceVariants(response.data.service_variants);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
     }
 
     const RenderFilters = () => {
@@ -214,17 +185,37 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
         setSelectedFilters(newSelectedFilters);
     }
 
-    let items = [];
-    for (let number = 1; number <= 5; number++) {
-        items.push(
-            <Pagination.Item onClick={() => onPageChange(number)} key={number} active={number === pageNum}>
-            {number}
-            </Pagination.Item>,
-        );
+    function convertResourcesToFilterOptions (resources:any) {
+        return resources.map(function(resource:any, i:number) {
+            const filterOption : FilterOption = {
+                name: resource.title,
+                id: resource.id,
+            }
+            return filterOption
+        })
     }
 
-    let SelectedFilters = RenderSelectedFilters();
+    async function deleteServiceVariant(variantId:string) {
+        try {
+            await props.feeScheduleApi.deleteVariant(variantId);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    function handlePreviousPage () {
+        if (pageNum > 1) {
+            setPageNum(pageNum - 1)
+        }
+    }
+
+    function handleNextPage () {
+        setPageNum(pageNum + 1)
+    }
+
     const Filters = RenderFilters();
+    let SelectedFilters = RenderSelectedFilters();
+    let ServiceVariantRows = RenderServiceVariants();
 
     return (
         <Container className="mt-5">
@@ -241,9 +232,16 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
 
             <Row>
                 <Col sm={10}>
-                    <Row className="ps-2">
+                    <Row className="ps-2 mb-4">
                         {SelectedFilters}
                     </Row>
+                </Col>
+            </Row>
+
+            <Row>
+                <Col sm={10}>
+                    <Button onClick={handlePreviousPage} variant="info" className="me-2 text-white">Previous Page</Button>
+                    <Button onClick={handleNextPage} variant="info" className="text-white">Next Page</Button>
                 </Col>
                 <Col sm={2}>
                     <Dropdown className="float-end mb-5">
@@ -257,7 +255,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                     </Dropdown>
                 </Col>
             </Row>
-
             <Table>
                 <thead>
                     <tr>
@@ -267,10 +264,9 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableItems}
+                    {ServiceVariantRows}
                 </tbody>
             </Table>
-            <Pagination>{items}</Pagination>
         </Container>
     )
 }
