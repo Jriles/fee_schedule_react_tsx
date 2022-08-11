@@ -16,8 +16,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
     const SERVICE_FILTER_ID = 'serviceFilter';
     const SERVICE_FILTER_TYPE = 'service';
     const ATTRIBUTE_VALUE_FILTER_TYPE = 'attribute_value';
-    const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
-    const [pageNum, setPageNum] = React.useState(1);
 
     interface FilterOption {
         name: string;
@@ -35,10 +33,122 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
         [id: string] : Filter
     }
 
+    const [serviceVariants, setServiceVariants] = React.useState<VariantResponse[]>([]);
+    const [pageNum, setPageNum] = React.useState(1);
     const [filters, setFilters] = React.useState<FilterDict>({});
     const [selectedFilters, setSelectedFilters] = React.useState<FilterDict>({});
 
     React.useEffect(() => {
+        const attributeValueIds = getSelectedAttributeValueIds()
+        const serviceId = getSelectedServiceId();
+
+        props.feeScheduleApi.getVariants(attributeValueIds,pageNum,serviceId).then((response: AxiosResponse) => {
+            console.log(response.data.service_variants)
+            setServiceVariants(response.data.service_variants);
+        })
+            .catch((error: any) => {
+                console.log(error);
+            });
+
+        fetchFilterData()
+            .catch(console.error);
+    }, [selectedFilters, pageNum]) 
+
+    // ORDER OF HELPER FUNCTIONS //
+    // 1. Api Calls              //
+    // 3. Handler Functions      //
+    // 2. Render Functions       //
+    ///////////////////////////////
+    async function deleteServiceVariant(variantId:string) {
+        try {
+            await props.feeScheduleApi.deleteVariant(variantId);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const fetchFilterData = async () => {
+        let filtersToLoad : FilterDict = {};
+        const serviceRes:any = await props.feeScheduleApi.getAllServices()
+        const serviceFilterOptions:FilterOption[] = convertResourcesToFilterOptions(serviceRes.data.services)
+        const firstServiceFilterOptionId:any = serviceFilterOptions.length > 0 ? serviceFilterOptions[0].id : null
+        const serviceFilter : Filter = {
+            name: SERVICE_FILTER_NAME,
+            options: serviceFilterOptions,
+            selectedOption: firstServiceFilterOptionId,
+            filterType: SERVICE_FILTER_TYPE
+        }
+        filtersToLoad[SERVICE_FILTER_ID] = serviceFilter;
+
+        const attributesRes:any = await props.feeScheduleApi.getAllAttributes()
+        const attributes : any[] = attributesRes.data.attributes;
+        for (const attribute of attributes) {
+            const attributeValuesRes:any = await props.feeScheduleApi.getAllAttributeValues(attribute.id);
+            const attributeValues : any[] = attributeValuesRes.data.attribute_values
+            const attributeFilterOptions = convertResourcesToFilterOptions(attributeValues);
+            const firstAttributeFilterOptionId = attributeFilterOptions.length > 0 ? attributeFilterOptions[0].id : null
+            const attributeFilter : Filter = {
+                name: attribute.title,
+                options: attributeFilterOptions,
+                selectedOption: firstAttributeFilterOptionId,
+                filterType: ATTRIBUTE_VALUE_FILTER_TYPE
+            }
+            filtersToLoad[attribute.id] = attributeFilter
+        }
+        setFilters(filtersToLoad)
+    }
+
+    function handleFilterChange(event: ChangeEvent<HTMLSelectElement>, filterId:string) {
+        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
+        let filterToUpdate = filters[filterId];
+        filterToUpdate.selectedOption = event.target.value
+        newSelectedFilters[filterId] = filterToUpdate
+        setSelectedFilters(newSelectedFilters);
+    }
+
+    function handleSelectFilter(filterId:string) {
+        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
+        let newFilter = filters[filterId];
+        newSelectedFilters[filterId] = newFilter
+        setSelectedFilters(newSelectedFilters);
+    }
+
+    function handleDeSelectFilter(filterId:string) {
+        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
+        delete newSelectedFilters[filterId];
+        setSelectedFilters(newSelectedFilters);
+    }
+
+    function handlePreviousPage () {
+        if (pageNum > 1) {
+            setPageNum(pageNum - 1)
+        }
+    }
+
+    function handleNextPage () {
+        setPageNum(pageNum + 1)
+    }
+
+    function convertResourcesToFilterOptions (resources:any) {
+        return resources.map(function(resource:any, i:number) {
+            const filterOption : FilterOption = {
+                name: resource.title,
+                id: resource.id,
+            }
+            return filterOption
+        })
+    }
+
+    function getSelectedServiceId () {
+        const selectedServiceFilter:any = selectedFilters[SERVICE_FILTER_ID];
+        let serviceId:string = '';
+        if (selectedServiceFilter) {
+            serviceId = selectedServiceFilter.selectedOption
+        }
+        return serviceId
+    }
+
+    function getSelectedAttributeValueIds () {
         let attributeValueIds:any[] = Object.keys(selectedFilters).map(function(filterId, i) {
             const selectedFilter:Filter = selectedFilters[filterId];
             if (selectedFilter.filterType == ATTRIBUTE_VALUE_FILTER_TYPE) {
@@ -46,54 +156,8 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
             }
         })
         attributeValueIds = attributeValueIds.filter(x => x !== undefined);
-
-        const selectedServiceFilter:any = selectedFilters[SERVICE_FILTER_ID];
-        let serviceId:string = '';
-        if (selectedServiceFilter) {
-            serviceId = selectedServiceFilter.selectedOption
-        }
-        props.feeScheduleApi.getVariants(attributeValueIds,pageNum,serviceId).then((response: AxiosResponse) => {
-            console.log(response.data.service_variants)
-            setServiceVariants(response.data.service_variants);
-        })
-        .catch((error: any) => {
-            console.log(error);
-        });
-
-        const fetchFilterData = async () => {
-            let filtersToLoad : FilterDict = {};
-            const serviceRes:any = await props.feeScheduleApi.getAllServices()
-            const serviceFilterOptions:FilterOption[] = convertResourcesToFilterOptions(serviceRes.data.services)
-            const firstServiceFilterOptionId:any = serviceFilterOptions.length > 0 ? serviceFilterOptions[0].id : null
-            const serviceFilter : Filter = {
-                name: SERVICE_FILTER_NAME,
-                options: serviceFilterOptions,
-                selectedOption: firstServiceFilterOptionId,
-                filterType: SERVICE_FILTER_TYPE
-            }
-            filtersToLoad[SERVICE_FILTER_ID] = serviceFilter;
-
-            const attributesRes:any = await props.feeScheduleApi.getAllAttributes()
-            const attributes : any[] = attributesRes.data.attributes;
-            for (const attribute of attributes) {
-                const attributeValuesRes:any = await props.feeScheduleApi.getAllAttributeValues(attribute.id);
-                const attributeValues : any[] = attributeValuesRes.data.attribute_values
-                const attributeFilterOptions = convertResourcesToFilterOptions(attributeValues);
-                const firstAttributeFilterOptionId = attributeFilterOptions.length > 0 ? attributeFilterOptions[0].id : null
-                const attributeFilter : Filter = {
-                    name: attribute.title,
-                    options: attributeFilterOptions,
-                    selectedOption: firstAttributeFilterOptionId,
-                    filterType: ATTRIBUTE_VALUE_FILTER_TYPE
-                }
-                filtersToLoad[attribute.id] = attributeFilter
-            }
-            setFilters(filtersToLoad)
-        }
-
-        fetchFilterData()
-            .catch(console.error);
-    }, [selectedFilters, pageNum]) 
+        return attributeValueIds
+    }
 
     const RenderServiceVariants = () => {
         if (serviceVariants) {
@@ -162,55 +226,6 @@ export default function ServiceVariants(props:ServiceVariantsProps) {
                 </Col>
             )
         })
-    }
-
-    function handleFilterChange(event: ChangeEvent<HTMLSelectElement>, filterId:string) {
-        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
-        let filterToUpdate = filters[filterId];
-        filterToUpdate.selectedOption = event.target.value
-        newSelectedFilters[filterId] = filterToUpdate
-        setSelectedFilters(newSelectedFilters);
-    }
-
-    function handleSelectFilter(filterId:string) {
-        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
-        let newFilter = filters[filterId];
-        newSelectedFilters[filterId] = newFilter
-        setSelectedFilters(newSelectedFilters);
-    }
-
-    function handleDeSelectFilter(filterId:string) {
-        let newSelectedFilters : FilterDict = Object.assign({}, selectedFilters);
-        delete newSelectedFilters[filterId];
-        setSelectedFilters(newSelectedFilters);
-    }
-
-    function convertResourcesToFilterOptions (resources:any) {
-        return resources.map(function(resource:any, i:number) {
-            const filterOption : FilterOption = {
-                name: resource.title,
-                id: resource.id,
-            }
-            return filterOption
-        })
-    }
-
-    async function deleteServiceVariant(variantId:string) {
-        try {
-            await props.feeScheduleApi.deleteVariant(variantId);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    function handlePreviousPage () {
-        if (pageNum > 1) {
-            setPageNum(pageNum - 1)
-        }
-    }
-
-    function handleNextPage () {
-        setPageNum(pageNum + 1)
     }
 
     const Filters = RenderFilters();

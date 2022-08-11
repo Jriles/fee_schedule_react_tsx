@@ -1,7 +1,7 @@
 import { Button, Container, Form } from "react-bootstrap";
 import { CreateServiceVariantSchema, DefaultApi, ServiceAttributeLineResponse, ServiceAttributeValue, ServiceResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React, { ChangeEvent, ChangeEventHandler } from "react";
+import React, { ChangeEvent, ChangeEventHandler, FormEvent } from "react";
 import { countryAlpha2, currencyCodes } from "../const/isoCodes";
 
 interface CreateServiceVariantProps {
@@ -35,7 +35,9 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         });
     }, [])
 
-    function createServiceVariant() {
+    function createServiceVariant(event: FormEvent<HTMLFormElement>) {
+        console.log('called create service')
+        event.preventDefault();
         const serviceVariantVals: CreateServiceVariantSchema = {
             service_id: serviceId,
             state_cost: fee * 100,
@@ -168,7 +170,7 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
 
     return (
         <Container className="mt-5 w-50">
-            <Form>
+            <Form onSubmit={createServiceVariant}>
                 <Form.Group className="mb-3">
                     <Form.Label>Service</Form.Label>
                     <Form.Select onChange={onServiceIdChange}>
@@ -194,7 +196,7 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                         {countryOptions}
                     </Form.Select>
                 </Form.Group>
-                <Button onClick={createServiceVariant}>Submit</Button>
+                <Button type="submit">Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>
