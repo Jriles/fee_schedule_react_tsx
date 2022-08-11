@@ -25,18 +25,22 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     const [currencyCode, setCurrencyCode] = React.useState(currencyCodes[0]);
 
     React.useEffect(() => {
+        console.log('called use effect')
         props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
+            console.log(response.data.services)
             setServiceId(response.data.services[0].id)
             getAllServiceLines(response.data.services[0].id)
         })
         .catch((error: any) => {
             console.log(error);
         });
+        
     }, [])
 
-    function createServiceVariant(event: FormEvent<HTMLFormElement>) {
+    const createServiceVariant = (event: FormEvent<HTMLFormElement>) => {
         console.log('called create service')
+        console.log(serviceId)
         event.preventDefault();
         const serviceVariantVals: CreateServiceVariantSchema = {
             service_id: serviceId,
@@ -170,7 +174,7 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
 
     return (
         <Container className="mt-5 w-50">
-            <Form onSubmit={createServiceVariant}>
+            <Form onSubmit={createServiceVariant} onKeyUp={createServiceVariant}>
                 <Form.Group className="mb-3">
                     <Form.Label>Service</Form.Label>
                     <Form.Select onChange={onServiceIdChange}>
