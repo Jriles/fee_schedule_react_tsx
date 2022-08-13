@@ -1,7 +1,7 @@
 import { Button, Container, Form, ListGroup } from "react-bootstrap";
 import { AttributeValueResponse, CreateServiceAttributeValueSchema, CreateServiceSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React, { ChangeEvent, ChangeEventHandler } from "react";
+import React, { ChangeEvent, ChangeEventHandler, FormEvent } from "react";
 import { useParams } from "react-router-dom";
 
 interface CreateServiceAttributeLineProps {
@@ -34,7 +34,8 @@ export default function CreateServiceAttributeValue(props:CreateServiceAttribute
         });
     }, [])
 
-    function createServiceAttributeValue() {
+    function createServiceAttributeValue(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         const serviceAttrVal: CreateServiceAttributeValueSchema = {
             attributeValueId: selectedAttributeValueId
         }
@@ -64,14 +65,14 @@ export default function CreateServiceAttributeValue(props:CreateServiceAttribute
 
     return (
         <Container className="mt-5 w-50">
-            <Form>
+            <Form onSubmit={createServiceAttributeValue}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>{attributeTitle}</Form.Label>
                     <Form.Select onChange={onSelectedAttributeValueIdChange}>
                         {attributeValueOptions}
                     </Form.Select>
                 </Form.Group>
-                <Button onClick={createServiceAttributeValue}>Submit</Button>
+                <Button type="submit">Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>

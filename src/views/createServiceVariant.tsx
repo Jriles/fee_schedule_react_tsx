@@ -39,8 +39,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     }, [])
 
     const createServiceVariant = (event: FormEvent<HTMLFormElement>) => {
-        console.log('called create service')
-        console.log(serviceId)
         event.preventDefault();
         const serviceVariantVals: CreateServiceVariantSchema = {
             service_id: serviceId,

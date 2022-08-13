@@ -1,7 +1,7 @@
 import { Button, Container, Form } from "react-bootstrap";
 import { CreateServiceSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 
 interface CreateServiceProps {
     feeScheduleApi: DefaultApi;
@@ -11,7 +11,8 @@ export default function CreateService(props:CreateServiceProps) {
     const [res, setRes] = React.useState("");
     const [serviceTitle, setServiceTitle] = React.useState("");
 
-    function createService() {
+    function createService(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         const serviceVals: CreateServiceSchema = {
             title: serviceTitle
         }
@@ -31,12 +32,12 @@ export default function CreateService(props:CreateServiceProps) {
 
     return (
         <Container className="mt-5 w-50">
-            <Form>
+            <Form onSubmit={createService}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Service Name</Form.Label>
                     <Form.Control onChange={onTitleChange} placeholder="Ammendment Foreign" />
                 </Form.Group>
-                <Button onClick={createService}>Submit</Button>
+                <Button type="submit">Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>

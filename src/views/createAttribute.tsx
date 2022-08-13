@@ -1,7 +1,7 @@
 import { Button, Container, Form, ListGroup } from "react-bootstrap";
 import { CreateAttributeSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 
 interface CreateAttributeProps {
     feeScheduleApi: DefaultApi;
@@ -11,7 +11,8 @@ export default function CreateAttribute(props:CreateAttributeProps) {
     const [res, setRes] = React.useState("");
     const [attributeTitle, setattributeTitle] = React.useState("");
 
-    function createAttribute() {
+    function createAttribute(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         const attr: CreateAttributeSchema = {
             title: attributeTitle
         }
@@ -31,12 +32,12 @@ export default function CreateAttribute(props:CreateAttributeProps) {
 
     return (
         <Container className="mt-5 w-50">
-            <Form>
+            <Form onSubmit={createAttribute}>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>Attribute Name</Form.Label>
                     <Form.Control onChange={onTitleChange} placeholder="Jurisdiction" />
                 </Form.Group>
-                <Button onClick={createAttribute}>Submit</Button>
+                <Button type="submit">Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>

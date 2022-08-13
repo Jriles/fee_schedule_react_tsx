@@ -1,7 +1,7 @@
 import { Button, Container, Form } from "react-bootstrap";
 import { CreateAttributeValueSchema, DefaultApi } from '../components/api/api';
 import { AxiosResponse } from "axios";
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FormEvent } from "react";
 import { useParams } from "react-router-dom";
 
 interface CreateAttributeValueProps {
@@ -26,7 +26,8 @@ export default function CreateAttributeValue(props:CreateAttributeValueProps) {
         });
     }, [])
 
-    function createAttributeValue() {
+    function createAttributeValue(event: FormEvent<HTMLFormElement>) {
+        event.preventDefault();
         const attrVal: CreateAttributeValueSchema = {
             title: attributeValueTitle
         }
@@ -46,12 +47,12 @@ export default function CreateAttributeValue(props:CreateAttributeValueProps) {
 
     return (
         <Container className="mt-5 w-50">
-            <Form>
+            <Form onSubmit={createAttributeValue}>
                 <Form.Group className="mb-3">
                     <Form.Label>{attributeTitle}</Form.Label>
                     <Form.Control onChange={onTitleChange} placeholder="Alabama" />
                 </Form.Group>
-                <Button onClick={createAttributeValue}>Submit</Button>
+                <Button type="submit">Submit</Button>
                 <p>{res}</p>
             </Form>
         </Container>
