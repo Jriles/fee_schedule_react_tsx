@@ -172,7 +172,7 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
 
     return (
         <Container className="mt-5 w-50">
-            <Form onSubmit={createServiceVariant} onKeyUp={createServiceVariant}>
+            <Form onSubmit={createServiceVariant}>
                 <Form.Group className="mb-3">
                     <Form.Label>Service</Form.Label>
                     <Form.Select onChange={onServiceIdChange}>
