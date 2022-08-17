@@ -1,10 +1,14 @@
-import Navbar from 'react-bootstrap/Navbar';
+import {
+    Navbar,
+    Button
+ } from 'react-bootstrap';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import {
     Link,
   } from "react-router-dom"
+import React from 'react';
 
 export default function NavBarComponent() {
     return (
@@ -19,18 +23,6 @@ export default function NavBarComponent() {
                     className=""
                     navbarScroll
                 >
-                    {/* <NavDropdown className="fs-5" title="Blog" id="navbarScrollingDropdown" active menuVariant="dark" >
-                        <NavDropdown.Item className="fs-5">
-                            <Link to="/blog/react" className="text-white" style={{ textDecoration: 'none' }}>
-                                Services
-                            </Link>
-                        </NavDropdown.Item>
-                        <NavDropdown.Item className="fs-5">
-                            <Link to="/blog/shopify" className="text-white" style={{ textDecoration: 'none' }}>
-                                Shopify
-                            </Link>
-                        </NavDropdown.Item>
-                    </NavDropdown> */}
                     <Nav.Item className="fs-5 mt-1">
                         <Link to="/services" className="text-white" style={{ textDecoration: 'none' }}>Services</Link>
                     </Nav.Item>
@@ -39,6 +31,10 @@ export default function NavBarComponent() {
                     </Nav.Item>
                     <Nav.Item className="fs-5 mt-1 ms-3">
                         <Link to="/attributes" className="text-white" style={{ textDecoration: 'none' }}>Attributes</Link>
+                    </Nav.Item>
+                    <Nav.Item className="fs-5 mt-1 ms-3">
+                        <Link to="/login" className="text-white" style={{ textDecoration: 'none' }}>
+                            <Button>Login</Button></Link>
                     </Nav.Item>
                 </Nav>
                 </Navbar.Collapse>
