@@ -45,6 +45,7 @@ export default function CreateServiceAttributeValue(props:CreateServiceAttribute
             setRes(response.statusText);
         })
         .catch((error: any) => {
+            setRes(error.response.data.errMsg)
             console.log(error);
         });
     }

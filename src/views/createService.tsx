@@ -22,6 +22,7 @@ export default function CreateService(props:CreateServiceProps) {
             setRes(response.statusText);
         })
         .catch((error: any) => {
+            setRes(error.response.data.errMsg)
             console.log(error);
         });
     }

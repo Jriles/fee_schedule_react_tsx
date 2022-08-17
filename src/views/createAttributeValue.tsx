@@ -37,6 +37,7 @@ export default function CreateAttributeValue(props:CreateAttributeValueProps) {
             setRes(response.statusText);
         })
         .catch((error: any) => {
+            setRes(error.response.data.errMsg)
             console.log(error);
         });
     }

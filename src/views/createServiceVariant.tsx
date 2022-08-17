@@ -25,7 +25,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     const [currencyCode, setCurrencyCode] = React.useState(currencyCodes[0]);
 
     React.useEffect(() => {
-        console.log('called use effect')
         props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
             console.log(response.data.services)
@@ -52,7 +51,7 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
             setRes(response.statusText);
         })
         .catch((error: any) => {
-            console.log(error);
+            setRes(error.response.data.errMsg)
         });
     }
 
