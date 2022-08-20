@@ -5,6 +5,7 @@ import React, { ChangeEvent, ChangeEventHandler, FormEvent } from "react";
 import { countryAlpha2, currencyCodes } from "../const/isoCodes";
 import ModalWComponent from "../components/modalWComponent";
 import CreateServiceForm from "../components/forms/createServiceForm";
+import CreateServiceAttributeValueForm from "../components/forms/createServiceAttributeValueForm";
 
 interface CreateServiceVariantProps {
     feeScheduleApi: DefaultApi;
@@ -103,7 +104,13 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                                     </Form.Select>
                                 </Col>
                                 <Col md={{ span: 5 }}>
-                                    <Button>Create Service Attribute Value</Button>
+                                    <ModalWComponent 
+                                        btnName="Create Service Attribute Value"
+                                        btnClasses=""
+                                        header="Create Service Attribute Value"
+                                        callback={onCreateServiceAttributeValue}
+                                        component={<CreateServiceAttributeValueForm lineId={serviceLine.id} feeScheduleApi={props.feeScheduleApi}/>}
+                                    ></ModalWComponent>
                                 </Col>
                             </Row>
                         </Form.Group>
@@ -159,13 +166,14 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     function onCreateService() {
         props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
-            console.log(response.data.services)
-            setServiceId(response.data.services[0].id)
-            getAllServiceLines(response.data.services[0].id)
         })
         .catch((error: any) => {
             console.log(error);
         });
+    }
+
+    function onCreateServiceAttributeValue() {
+        getAllServiceLines(serviceId)
     }
 
     var serviceOptions:any = [];
