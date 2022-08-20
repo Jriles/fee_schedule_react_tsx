@@ -6,6 +6,7 @@ import { countryAlpha2, currencyCodes } from "../const/isoCodes";
 import ModalWComponent from "../components/modalWComponent";
 import CreateServiceForm from "../components/forms/createServiceForm";
 import CreateServiceAttributeValueForm from "../components/forms/createServiceAttributeValueForm";
+import CreateServiceAttributeLineForm from "../components/forms/createServiceAttributeLineForm";
 
 interface CreateServiceVariantProps {
     feeScheduleApi: DefaultApi;
@@ -176,6 +177,10 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         getAllServiceLines(serviceId)
     }
 
+    function onCreateServiceAttributeLine() {
+        getAllServiceLines(serviceId)
+    }
+
     var serviceOptions:any = [];
     if (services) {
         serviceOptions = services.map(function(service, i) {
@@ -231,7 +236,13 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                     {renderServiceAttrLines()}
                 </Form.Group>
                 <Form.Group className="mb-4 mt-5 text-center">
-                    <Button>Create Service Attribute Line</Button>
+                    <ModalWComponent 
+                        btnName="Create Service Attribute Line"
+                        btnClasses=""
+                        header="Create Service Attribute Line"
+                        callback={onCreateServiceAttributeLine}
+                        component={<CreateServiceAttributeLineForm feeScheduleApi={props.feeScheduleApi} serviceId={serviceId}/>}
+                    ></ModalWComponent>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Currency</Form.Label>

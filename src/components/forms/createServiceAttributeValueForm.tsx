@@ -1,8 +1,7 @@
-import { Button, Container, Form, ListGroup } from "react-bootstrap";
+import { Button, Container, Form } from "react-bootstrap";
 import { AttributeValueResponse, CreateServiceAttributeValueSchema, DefaultApi } from '../api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent, FormEvent } from "react";
-import { useParams } from "react-router-dom";
 
 type Callback = () => void;
 interface CreateServiceAttributeValueFormProps {
