@@ -1,8 +1,10 @@
-import { Button, Container, Form } from "react-bootstrap";
+import { Button, Col, Container, Form, Row } from "react-bootstrap";
 import { CreateServiceVariantSchema, DefaultApi, ServiceAttributeLineResponse, ServiceAttributeValue, ServiceResponse } from '../components/api/api';
 import { AxiosResponse } from "axios";
 import React, { ChangeEvent, ChangeEventHandler, FormEvent } from "react";
 import { countryAlpha2, currencyCodes } from "../const/isoCodes";
+import ModalWComponent from "../components/modalWComponent";
+import CreateServiceForm from "../components/forms/createServiceForm";
 
 interface CreateServiceVariantProps {
     feeScheduleApi: DefaultApi;
@@ -27,7 +29,6 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
     React.useEffect(() => {
         props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
             setServices(response.data.services);
-            console.log(response.data.services)
             setServiceId(response.data.services[0].id)
             getAllServiceLines(response.data.services[0].id)
         })
@@ -92,10 +93,19 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
             lineOptions = serviceLines.map(function(serviceLine, i) {
                     return (
                         <Form.Group className="mb-3">
-                            <Form.Label>{serviceLine.attribute_title}</Form.Label>
-                            <Form.Select aria-label="Default select example" onChange={(e) => onServiceAttrValsChange(e, serviceLine.id)}>
-                                {renderLineAttrs(serviceLine)}
-                            </Form.Select>
+                            <Row>
+                                <Form.Label>{serviceLine.attribute_title}</Form.Label>
+                            </Row>
+                            <Row>
+                                <Col>
+                                    <Form.Select aria-label="Default select example" onChange={(e) => onServiceAttrValsChange(e, serviceLine.id)}>
+                                        {renderLineAttrs(serviceLine)}
+                                    </Form.Select>
+                                </Col>
+                                <Col md={{ span: 5 }}>
+                                    <Button>Create Service Attribute Value</Button>
+                                </Col>
+                            </Row>
                         </Form.Group>
                     )
                 }
@@ -146,6 +156,18 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         setCountryCode(e.target.value)
     }
 
+    function onCreateService() {
+        props.feeScheduleApi.getAllServices().then((response: AxiosResponse) => {
+            setServices(response.data.services);
+            console.log(response.data.services)
+            setServiceId(response.data.services[0].id)
+            getAllServiceLines(response.data.services[0].id)
+        })
+        .catch((error: any) => {
+            console.log(error);
+        });
+    }
+
     var serviceOptions:any = [];
     if (services) {
         serviceOptions = services.map(function(service, i) {
@@ -173,10 +195,25 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
         <Container className="mt-5 w-50">
             <Form onSubmit={createServiceVariant}>
                 <Form.Group className="mb-3">
-                    <Form.Label>Service</Form.Label>
-                    <Form.Select onChange={onServiceIdChange}>
-                        {serviceOptions}
-                    </Form.Select>
+                    <Row>
+                        <Form.Label>Service</Form.Label>
+                    </Row>
+                    <Row>
+                        <Col>    
+                            <Form.Select onChange={onServiceIdChange}>
+                                {serviceOptions}
+                            </Form.Select>
+                        </Col>
+                        <Col md={{ span: 3 }}>
+                            <ModalWComponent 
+                                btnName="Create Service"
+                                btnClasses=""
+                                header="Create Service"
+                                callback={onCreateService}
+                                component={<CreateServiceForm feeScheduleApi={props.feeScheduleApi}/>}
+                            ></ModalWComponent>
+                        </Col>
+                    </Row>
                 </Form.Group>
                 <Form.Group className="mb-3" controlId="formBasicEmail">
                     <Form.Label>State Cost</Form.Label>
@@ -184,6 +221,9 @@ export default function CreateServiceVariant(props:CreateServiceVariantProps) {
                 </Form.Group>
                 <Form.Group className="mb-3">
                     {renderServiceAttrLines()}
+                </Form.Group>
+                <Form.Group className="mb-4 mt-5 text-center">
+                    <Button>Create Service Attribute Line</Button>
                 </Form.Group>
                 <Form.Group className="mb-3">
                     <Form.Label>Currency</Form.Label>
