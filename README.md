@@ -4,9 +4,9 @@ I wrote this app in conjunction with [https://github.com/Jriles/fee_schedule_ser
 
 This repository in particular is an interface for the staff (that again never materialized) to maintain that government data. This was supposed to be an internal tool.
 
-# Architecture
+## Architecture
 
-## Tech Stack
+### Tech Stack
 * React
 * Typescript
 * Bootstrap
@@ -15,7 +15,7 @@ The project is headless, meaning that the frontend (this repo) is completely dec
 
 I chose React/Typescript because I hate learning about syntax errors in the console. Typescript can feel limiting at first, but I grew to love its lack of ambiguity. I like React because of its modular nature and its ease of use if one cares about being DRY (as I did, you be the judge of how well I did in that regard). I also enjoyed using React because of the strength of the community an example would be the excellent react-router library. I chose bootstrap because again I was already comfortable with it and I love the power of being able to throw stuff together that is visually acceptable.
 
-# Run Frontend (This Repo) Locally
+## Run Frontend (This Repo) Locally
 
 In the project directory, you can run:
 
@@ -25,4 +25,4 @@ Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 
-# Run Backend (Repo Listed Above) Locally
+## Run Backend (Repo Listed Above) Locally
