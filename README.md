@@ -13,7 +13,7 @@ This repository in particular is an interface for the staff (that again never ma
 
 The project is headless, meaning that the frontend (this repo) is completely decoupled from the backend. So while you can run this repository locally on its own, you should really run it in conjunction with the repo listed above if you want to CRUD anything. Steps for getting that started are listed there, but I'll add them here as well. 
 
-I chose React/Typescript because I hate learning about syntax errors in the console. Typescript can feel limiting at first, but I grew to love its lack of ambiguity. I like React because of its modular nature and its ease of use if one cares about being DRY (as I did, you be the judge of how well I did in that regard). I also enjoyed using React because of the strength of the community an example would be the excellent react-router library. I chose bootstrap because again I was already comfortable with it and I love the power of being able to throw stuff together that is visually acceptable.
+I chose React/Typescript because I hate learning about syntax errors in the console. Typescript can feel limiting at first, but I grew to love its lack of ambiguity. I like React because of its modular nature and its ease of use if one cares about being DRY (as I did, you be the judge of how well I did in that regard). I also enjoyed using React because of the strength of the community; an example would be the excellent react-router library. I chose bootstrap because again I was already comfortable with it and I love the power of being able to throw stuff together that is visually acceptable.
 
 ## Run Frontend (This Repo) Locally
 
