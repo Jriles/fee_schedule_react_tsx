@@ -1,8 +1,21 @@
-# Getting Started with Create React App
+# Government Fee Schedule API
+## Purpose
+I wrote this app in conjunction with [https://github.com/Jriles/fee_schedule_server](https://github.com/Jriles/fee_schedule_server) as a means of persisting and maintaining government costs associated with different corporate services in a single source of truth. An example would be "how much does it cost to form an LLC in Alabama?". At the time I worked at a corporate services company and I thought I saw a potential pain point with regard to that problem. Corporate services companies need to maintain internal databases of government cost data related to the services they offer in order to automate their order/quote flows. By centralizing this information and maintaining it, the idea was that corporate service companies could avoid the process, tech debt, and cost of persisting and maintaining the data themselves.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This repository in particular is an interface for the staff (that again never materialized) to maintain that government data. This was supposed to be an internal tool.
 
-## Available Scripts
+# Architecture
+
+## Tech Stack
+* React
+* Typescript
+* Bootstrap
+
+The project is headless, meaning that the frontend (this repo) is completely decoupled from the backend. So while you can run this repository locally on its own, you should really run it in conjunction with the repo listed above if you want to CRUD anything. Steps for getting that started are listed there, but I'll add them here as well. 
+
+I chose React/Typescript because I hate learning about syntax errors in the console. Typescript can feel limiting at first, but I grew to love its lack of ambiguity. I like React because of its modular nature and its ease of use if one cares about being DRY (as I did, you be the judge of how well I did in that regard). I also enjoyed using React because of the strength of the community an example would be the excellent react-router library. I chose bootstrap because again I was already comfortable with it and I love the power of being able to throw stuff together that is visually acceptable.
+
+# Run Frontend (This Repo) Locally
 
 In the project directory, you can run:
 
@@ -11,36 +24,5 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+# Run Backend (Repo Listed Above) Locally
