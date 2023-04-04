@@ -19,6 +19,7 @@ export default function CreateServiceAttributeLineForm(props:CreateServiceAttrib
     React.useEffect(() => {
         props.feeScheduleApi.getAllAttributes().then((response: AxiosResponse) => {
             setAttributes(response.data.attributes)
+            setSelectedAttribute(response.data.attributes[0].id)
         })
         .catch((error: any) => {
             console.log(error);

@@ -17,6 +17,5 @@ export default function CreateFeeScheduleApiClient(props:ApiProps) {
         }
     });
     const feeScheduleApi = new DefaultApi(feeScheduleConfig);
-    console.log(feeScheduleApi)
     return feeScheduleApi; 
 }
